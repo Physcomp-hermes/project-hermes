@@ -14,6 +14,7 @@ while True:
     while True:
         content = client.recv(32)
 
+
         if len(content) == 0:
             break
 

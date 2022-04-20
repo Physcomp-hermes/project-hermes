@@ -3,7 +3,7 @@ import cv2
 markerDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
 # this is the detector parameters
 markerParams = cv2.aruco.DetectorParameters_create()
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 
 def main():
     # main for debugging purposes

@@ -1,28 +1,42 @@
 import cv2
 
+class Locator:
+    def __init__(self, people_list):
+        '''
+        Locator class to update what each people are looking at
+        '''
+        print("Locator initiated...\n")
+        self.markerDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
+        self.markerParams = cv2.aruco.DetectorParameters_create()
+        self.people_list = people_list
+        self.cam = cv2.VideoCapture(0)
+        self.__update_frame()
+    
+    def __del__(self):
+        self.cam.release()
+        cv2.destroyAllWindows()
+        
+    def __update_frame(self):
+        '''
+        Method to update frame in locator
+        '''
+        ret, self.frame = self.cam.read()
+        (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.markerDict, parameters=self.markerParams)
+    
+    def show_markers(self):
+        self.__update_frame()
+        frame = self.frame.copy()
+        cv2.aruco.drawDetectedMarkers(frame, self.corners, self.ids)
+        cv2.imshow('frame', frame)
 
 
 def main():
-    # main for debugging purposes
-    print("Loading the camera...\n")
-    markerDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
-    # this is the detector parameters
-    markerParams = cv2.aruco.DetectorParameters_create()
-    cam = cv2.VideoCapture(1)
-    while(True):
-        
-        show_markers(markerDict, markerParams, cam)
-        
+    locator = Locator([])
+    while True:
+        locator.show_markers()
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    cam.release()
-    cv2.destroyAllWindows()
 
-def show_markers(markerDict, markerParams, cam):
-    ret, frame = cam.read()
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(frame, markerDict, parameters=markerParams)
-    cv2.aruco.drawDetectedMarkers(frame, corners, ids)
-    cv2.imshow('frame', frame)
 
 
 if __name__ == "__main__":

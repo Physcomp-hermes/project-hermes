@@ -24,7 +24,7 @@ def main():
 
     
     # Set up the server
-    # i.e. server.start()
+    # server.start()
 
     ### Main processing loop. 
     while True:

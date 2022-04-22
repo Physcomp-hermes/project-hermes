@@ -1,5 +1,4 @@
 import cv2
-import argparse
 from cv2 import _OutputArray_DEPTH_MASK_16F
 import numpy as np
 
@@ -18,12 +17,21 @@ def main():
     saves them in png format.
     """
 
-    print(markerDict)
+    generate_board()
+
+def generate_markers():
     marker = np.zeros((300,300,1), dtype="uint8")
     for id in range(10):
         cv2.aruco.drawMarker(markerDict, id, 300, marker, 1)
         outputPath = outputDir + "/marker" + str(id) + ".png"
         cv2.imwrite(outputPath, marker)
+
+def generate_board():
+    # cv2.aruco.GridBoard.draw((1000, 1500), board)
+    board = cv2.aruco.CharucoBoard_create(7,5,1,.8,markerDict)
+    board_img = board.draw((2000,2000))
+    outputPath = outputDir + "/board" + ".png"
+    cv2.imwrite(outputPath, board_img)
 
 if __name__ == "__main__":
     main()

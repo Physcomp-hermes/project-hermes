@@ -29,6 +29,9 @@ class Locator:
         cv2.aruco.drawDetectedMarkers(frame, self.corners, self.ids)
         cv2.imshow('frame', frame)
 
+# Get rotation and translation matrix to mpa them inside the coordinate system
+# Use this to draw a line, see if it goes pass the square that was inputted 
+# Simplest thing is to just to calcuate the coordinates then 
 
 def main():
     locator = Locator([])

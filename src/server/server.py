@@ -14,11 +14,16 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
 
-def handle_client(conn, addr):
+# option 1: client asking server, and server responding
+# Option 2: Server talking to client
+def handle_client(conn, addr, strengths):
     print(f"[NEW CONNECTION] {addr} connected.")
 
+    # check id of the client
     connected = True
     while connected:
+        
+        # send back the signal strength for that client
         msg_length = conn.recv(HEADER).decode(FORMAT)
         if msg_length:
             msg_length = int(msg_length)
@@ -32,12 +37,12 @@ def handle_client(conn, addr):
     conn.close()
 
 
-def start():
+def start(strengths):
     server.listen()
     print(f"[LISTENING] Server is listening on {SERVER}")
     while True:
         conn, addr = server.accept()
-        thread = threading.Thread(target=handle_client, args=(conn, addr))
+        thread = threading.Thread(target=handle_client, args=(conn, addr, strengths))
         thread.start()
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
 

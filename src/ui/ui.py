@@ -78,13 +78,13 @@ def draw_ui():
 
     # create a Submit Button and place into the window
     Button(window, text='Submit',font=f3,width=20,bg='maroon',fg='ivory',command=database).place(x=160,y=400)
-    
+
     # run the mainloop
     window.mainloop()
 
 def ui_run(people):
     # draw UI
-    while True:
+    #while True:
         # Take in form input
         # if the form is submitted, save as variable
         # Append to people list

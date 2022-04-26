@@ -1,8 +1,8 @@
 # Mac DS
 .DS_Store
-# image
-img/*
+#ignored files
 data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

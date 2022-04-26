@@ -82,11 +82,12 @@ class Locator:
     def __update_frame(self):
         '''
         Method to update frame in locator
+        Detects and saves corners and ids
         '''
         ret, self.frame = self.cam.read()
         (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.marker_dict, parameters=self.marker_params)
-        for set in self.corners:
-            print(set)
+        # for set in self.corners:
+            # print(set)
     
     def get_frame(self):
         self.__update_frame()
@@ -104,19 +105,22 @@ class Locator:
         marker_len = 0.05
         rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, marker_len, self.camera_matrix, self.dist_coeffs)
         
-        
-        if np.any(self.ids):
+        if self.ids != None:
             print(len(self.ids))
             # rvecs = rvecs / math.pi * 180
             for i in range(0, len(self.ids)):
-                
-                print("R: {0}", rvecs[i]/ math.pi * 180)
-                print("T: {0}", tvecs[i])
-                # X: Red, Y: Green, Z: Blue
+                print("ID: ", self.ids[i])
+                print("Corners", self.corners[i])
+
                 cv2.drawFrameAxes(frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i], 0.1)
         cv2.imshow('frame', frame)
     
-    def check_marker_facing(self):
+    def test_markers(self):
+        self.__update_frame()
+        # frame = self.frame.copy()
+        if np.any(self.ids):
+            i = 1
+    
 
     
 
@@ -129,12 +133,10 @@ def main():
     
     # locator.calibrate()
     while True:
-        # path = datadir + "/img" + str(i) + ".png"
-        # imwrite(path, locator.get_frame())
-        # delay(2000)
-        # locator.show_markers()
-        # locator.calibrate()
+        # locator.test_markers()
         locator.show_markers()
+
+        
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 

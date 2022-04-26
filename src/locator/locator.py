@@ -1,5 +1,6 @@
 import cv2, os
 import numpy as np
+import math
 
 class Locator:
     def __init__(self, people_list):
@@ -11,6 +12,9 @@ class Locator:
         self.marker_params = cv2.aruco.DetectorParameters_create()
         self.people_list = people_list
         self.cam = cv2.VideoCapture(0)
+        # Rotation and translation vectors for markers
+        self.rvecs = np.zeros(3)
+        self.tvecs = np.zeros(3)
         # self.__update_frame()
         self.camera_matrix, self.dist_coeffs = self.calibrate()
     
@@ -69,7 +73,7 @@ class Locator:
             distCoeffs=dist_coeffs_init,
             flags=flags,
             criteria=(cv2.TERM_CRITERIA_EPS & cv2.TERM_CRITERIA_COUNT, 10000, 1e-9))
-            
+
         print("Camera matrix:")
         print(camera_matrix)
         return camera_matrix, dist_coeffs
@@ -81,6 +85,8 @@ class Locator:
         '''
         ret, self.frame = self.cam.read()
         (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.marker_dict, parameters=self.marker_params)
+        for set in self.corners:
+            print(set)
     
     def get_frame(self):
         self.__update_frame()
@@ -88,10 +94,30 @@ class Locator:
     
     
     def show_markers(self):
+        '''
+        Display markers on the scene
+        '''
         self.__update_frame()
         frame = self.frame.copy()
         cv2.aruco.drawDetectedMarkers(frame, self.corners, self.ids)
+        # Marker side length in metres.
+        marker_len = 0.05
+        rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, marker_len, self.camera_matrix, self.dist_coeffs)
+        
+        
+        if np.any(self.ids):
+            print(len(self.ids))
+            # rvecs = rvecs / math.pi * 180
+            for i in range(0, len(self.ids)):
+                
+                print("R: {0}", rvecs[i]/ math.pi * 180)
+                print("T: {0}", tvecs[i])
+                # X: Red, Y: Green, Z: Blue
+                cv2.drawFrameAxes(frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i], 0.1)
         cv2.imshow('frame', frame)
+    
+    def check_marker_facing(self):
+
     
 
 # Get rotation and translation matrix to mpa them inside the coordinate system
@@ -108,6 +134,7 @@ def main():
         # delay(2000)
         # locator.show_markers()
         # locator.calibrate()
+        locator.show_markers()
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 

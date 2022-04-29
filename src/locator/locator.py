@@ -90,30 +90,22 @@ class Locator:
         # for set in self.corners:
             # print(set)
     
-    def __calculate_reverse_projection(self, corners):
+    def __convert_camera_coordinate(self, coordinate, rvec, tvec):
         '''
-        Calculate reverse projection matrix based on rvec and tvec from solvePnP
-        corners: four corner coordinates of reference marker
+        Convert the given 3D local coordinate to 3D coordinate in camera coordinate system
+        coordinate: coordinate to be transformed
+        rvec: rvec to convert the coordinate
+        tvec: tvec to convert the coordinate
         '''
-        marker_width = 0.05
-        marker_coords = np.array([[0,0,0], 
-                                    [marker_width, 0, 0],
-                                    [marker_width, marker_width, 0],
-                                    [0, marker_width, 0]])
-        
-        ret, rvec, tvec = cv2.solvePnP(marker_coords, corners, self.camera_matrix, self.dist_coeffs)
-        identity = np.identity(3)
-        identity = np.c_[identity, np.zeros((3,1))]
-        # print(identity)
+        # calculate rotational matrix
         rod, jac = Rodrigues(rvec)
         tmp_matrix = np.c_[rod, tvec]
         extrinsic_matrix = np.r_[tmp_matrix, np.zeros((1,4))]
-        # print(extrinsic_matrix)
-        tmp_proj_matrix = np.matmul(self.camera_matrix, identity)
-        proj_matrix = np.matmul(tmp_proj_matrix, extrinsic_matrix)
-        print(proj_matrix)
         
+        return np.matmul(extrinsic_matrix, coordinate)
 
+        
+    
 
     def get_frame(self):
         self.__update_frame()

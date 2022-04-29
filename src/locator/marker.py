@@ -8,7 +8,6 @@ class Marker:
     It uses the coordinate system of the camera
     """
     
-    
     def __init__(self):
         # width of the marker in metres
         self.width = 0.05
@@ -45,7 +44,7 @@ class Marker:
         '''
         return self.centre_coord
 
-    def update_location(self, tvec, rvec):
+    def update_location(self, rvec, tvec):
         '''
         Update the locations of the marker using given tvec and rvec.
         tvec: (1x3 2-axis array) transformation vector from marker to camerea coordinate

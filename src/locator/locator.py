@@ -105,14 +105,30 @@ class Locator:
         rod, jac = Rodrigues(rvec)
         tmp_matrix = np.c_[rod, np.matrix.transpose(tvec)]
         extrinsic_matrix = np.r_[tmp_matrix, np.zeros((1,4))]
-        print(np.r_[coordinate, np.ones((1,1))])
-        print(extrinsic_matrix)
+        # print(np.r_[coordinate, np.ones((1,1))])
+        # print(extrinsic_matrix)
         tmp_coordinate = np.matmul(extrinsic_matrix, np.r_[coordinate, np.ones((1,1))])
 
-        print("Coord", tmp_coordinate)
         return np.delete(tmp_coordinate, 3, 0)
 
+    def __calculate_angle(self, v1, v2):
+        '''
+        Calculate the angle between two vectors.
+        v1: first vector
+        v2: second vector
+        returns the angle in radians
+        '''
         
+        v1_norm = np.linalg.norm(v1)
+        v2_norm = np.linalg.norm(v2)
+        v1_t = np.transpose(v1)
+        v2_t = np.transpose(v2)
+        print(v1_t[0])
+        print(v2_t[0])
+        return np.arccos(np.dot(v1_t[0], v2_t[0]) / (v1_norm * v2_norm))
+        
+
+
     def process_next_frame(self):
         '''
         Update and process the next frame.
@@ -124,6 +140,8 @@ class Locator:
         # draw detected markers 
         cv2.aruco.drawDetectedMarkers(display_frame, self.corners, self.ids)
         rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
+        target_coord = np.zeros((3,1))
+        status = False
         # print(self.centres_camera)
         if np.any(self.ids):
             origin = np.zeros((3,1))
@@ -133,8 +151,18 @@ class Locator:
             for i in range(0, len(self.ids)):
                 # calculate which 
                 newCoords = self.__convert_camera_coordinate(origin, rvecs[i], tvecs[i])
-                print("ID: ", self.ids[i])
-                print("center", newCoords)
+                if self.ids[i] == 2:
+                    target_coord = newCoords
+                    status = True
+                if self.ids[i] == 1 and status:
+                    unit_y = [[0], [1], [0]]
+                    # get coordinate of a point in the front
+                    front = self.__convert_camera_coordinate(unit_y, rvecs[i], tvecs[i])
+
+                    angle = self.__calculate_angle(np.subtract(front, newCoords), np.subtract(target_coord, newCoords))
+                    print("Angle: ", angle * 180 / math.pi)
+                # print("ID: ", self.ids[i])
+                # print("center", newCoords)
         
         
         cv2.imshow('frame', display_frame)
@@ -185,12 +213,6 @@ class Locator:
 # Simplest thing is to just to calcuate the coordinates then 
 
 def main():
-    # mat = np.ones((3,3))
-    # print(mat)
-    # mate = np.zeros((3,1))
-    # print(mate)
-    # com = np.c_[mat, mate]
-    # print(com)
     locator = Locator([])
     
     # locator.calibrate()

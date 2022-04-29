@@ -1,8 +1,10 @@
-from sys import displayhook
 import cv2, os
 from cv2 import Rodrigues
 import numpy as np
 import math
+from locator.marker import Marker
+
+marker_list = [Marker()]
 
 class Locator:
     def __init__(self, people_list):
@@ -46,7 +48,6 @@ class Locator:
         board = cv2.aruco.CharucoBoard_create(7,5,1,.8,self.marker_dict)
 
         for im in images:
-            # print("Processing image {0}", format(im))
             # Read image
             frame = cv2.imread(im)
             frame_bw = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -60,17 +61,13 @@ class Locator:
                 if res2[1] is not None and res2[2] is not None and len(res2[1])>3 and decimator%1==0:
                     all_corners.append(res2[1])
                     all_ids.append(res2[2])
-
             decimator+=1
-
         imsize = frame_bw.shape
         camera_matrix_init = np.array([[ 1000.,    0., imsize[0]/2.],
                                     [    0., 1000., imsize[1]/2.],
                                     [    0.,    0.,           1.]])
-
         dist_coeffs_init = np.zeros((5,1))
         flags = (cv2.CALIB_USE_INTRINSIC_GUESS + cv2.CALIB_RATIONAL_MODEL + cv2.CALIB_FIX_ASPECT_RATIO)
-        #flags = (cv2.CALIB_RATIONAL_MODEL)
         (ret, camera_matrix, dist_coeffs, r_vec, t_vec, std_dev_in, std_dev_ex, per_view_err) = cv2.aruco.calibrateCameraCharucoExtended(
             charucoCorners=all_corners,
             charucoIds=all_ids,
@@ -105,8 +102,6 @@ class Locator:
         rod, jac = Rodrigues(rvec)
         tmp_matrix = np.c_[rod, np.matrix.transpose(tvec)]
         extrinsic_matrix = np.r_[tmp_matrix, np.zeros((1,4))]
-        # print(np.r_[coordinate, np.ones((1,1))])
-        # print(extrinsic_matrix)
         tmp_coordinate = np.matmul(extrinsic_matrix, np.r_[coordinate, np.ones((1,1))])
 
         return np.delete(tmp_coordinate, 3, 0)
@@ -118,7 +113,6 @@ class Locator:
         v2: second vector
         returns the angle in radians
         '''
-        
         v1_norm = np.linalg.norm(v1)
         v2_norm = np.linalg.norm(v2)
         v1_t = np.transpose(v1)
@@ -126,14 +120,14 @@ class Locator:
         print(v1_t[0])
         print(v2_t[0])
         return np.arccos(np.dot(v1_t[0], v2_t[0]) / (v1_norm * v2_norm))
-        
-
 
     def process_next_frame(self):
         '''
         Update and process the next frame.
 
         '''
+        # Debugging code
+        markerList = []
         self.__update_frame()
         # display frame for debugging
         display_frame = self.frame.copy()
@@ -145,9 +139,7 @@ class Locator:
         # print(self.centres_camera)
         if np.any(self.ids):
             origin = np.zeros((3,1))
-            # print(origin)
             
-            # print("Origin", origin)
             for i in range(0, len(self.ids)):
                 # calculate which 
                 newCoords = self.__convert_camera_coordinate(origin, rvecs[i], tvecs[i])
@@ -161,8 +153,6 @@ class Locator:
 
                     angle = self.__calculate_angle(np.subtract(front, newCoords), np.subtract(target_coord, newCoords))
                     print("Angle: ", angle * 180 / math.pi)
-                # print("ID: ", self.ids[i])
-                # print("center", newCoords)
         
         
         cv2.imshow('frame', display_frame)

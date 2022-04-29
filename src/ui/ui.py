@@ -76,7 +76,7 @@ def draw_ui():
     window.mainloop()
 
 
-def ui_run(people):
+def ui_run():
     # draw UI
     draw_ui()
         
@@ -108,3 +108,6 @@ def ui_run(people):
             list = []
             list.append( name, codeId, gender, interest1, interest2, interest3)
             return list 
+
+if __name__ == "__main__":
+    ui_run()

@@ -1,4 +1,4 @@
-
+from locator.marker import Marker
 # This is the class for each person during the event
 
 class Person:
@@ -11,10 +11,12 @@ class Person:
         self.id = id
         self.category = category
         self.device = device
+        # marker associated with this person.
+        self.marker = Marker()
         
         # This the person this percon is currently facing at. 
-        # -1 means facing at no one
-        self.facing = -1
+        # 0 means facing at no one
+        self.facing = 0
 
     def set_facing(self, id):
         '''

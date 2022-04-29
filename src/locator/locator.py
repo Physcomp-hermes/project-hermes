@@ -1,4 +1,5 @@
 import cv2, os
+from cv2 import Rodrigues
 import numpy as np
 import math
 
@@ -89,6 +90,31 @@ class Locator:
         # for set in self.corners:
             # print(set)
     
+    def __calculate_reverse_projection(self, corners):
+        '''
+        Calculate reverse projection matrix based on rvec and tvec from solvePnP
+        corners: four corner coordinates of reference marker
+        '''
+        marker_width = 0.05
+        marker_coords = np.array([[0,0,0], 
+                                    [marker_width, 0, 0],
+                                    [marker_width, marker_width, 0],
+                                    [0, marker_width, 0]])
+        
+        ret, rvec, tvec = cv2.solvePnP(marker_coords, corners, self.camera_matrix, self.dist_coeffs)
+        identity = np.identity(3)
+        identity = np.c_[identity, np.zeros((3,1))]
+        # print(identity)
+        rod, jac = Rodrigues(rvec)
+        tmp_matrix = np.c_[rod, tvec]
+        extrinsic_matrix = np.r_[tmp_matrix, np.zeros((1,4))]
+        # print(extrinsic_matrix)
+        tmp_proj_matrix = np.matmul(self.camera_matrix, identity)
+        proj_matrix = np.matmul(tmp_proj_matrix, extrinsic_matrix)
+        print(proj_matrix)
+        
+
+
     def get_frame(self):
         self.__update_frame()
         return self.frame
@@ -116,10 +142,16 @@ class Locator:
         cv2.imshow('frame', frame)
     
     def test_markers(self):
+        
         self.__update_frame()
-        # frame = self.frame.copy()
-        if np.any(self.ids):
-            i = 1
+        frame = self.frame.copy()
+        if self.ids != None:
+            for id in range(0, len(self.ids)):
+                if id == 0:
+                    self.__calculate_reverse_projection(self.corners[id])
+        cv2.aruco.drawDetectedMarkers(frame, self.corners, self.ids)
+        cv2.imshow('frame', frame)
+            
     
 
     
@@ -129,12 +161,18 @@ class Locator:
 # Simplest thing is to just to calcuate the coordinates then 
 
 def main():
+    # mat = np.ones((3,3))
+    # print(mat)
+    # mate = np.zeros((3,1))
+    # print(mate)
+    # com = np.c_[mat, mate]
+    # print(com)
     locator = Locator([])
     
     # locator.calibrate()
     while True:
         # locator.test_markers()
-        locator.show_markers()
+        locator.test_markers()
 
         
         if cv2.waitKey(1) & 0xFF == ord('q'):

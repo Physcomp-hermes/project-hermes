@@ -1,3 +1,4 @@
+from sys import displayhook
 import cv2, os
 from cv2 import Rodrigues
 import numpy as np
@@ -9,14 +10,19 @@ class Locator:
         Locator class to update what each people are looking at
         '''
         print("Locator initiated...\n")
+        # size of marker in m.
+        self.marker_size = 0.05
+        # Marker parameters
         self.marker_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
         self.marker_params = cv2.aruco.DetectorParameters_create()
         self.people_list = people_list
+        # camera stream that will be used 
         self.cam = cv2.VideoCapture(0)
         # Rotation and translation vectors for markers
         self.rvecs = np.zeros(3)
         self.tvecs = np.zeros(3)
-        # self.__update_frame()
+        self.centres_camera = np.empty((1,))
+        # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = self.calibrate()
     
     def __del__(self):
@@ -87,8 +93,7 @@ class Locator:
         '''
         ret, self.frame = self.cam.read()
         (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.marker_dict, parameters=self.marker_params)
-        # for set in self.corners:
-            # print(set)
+        
     
     def __convert_camera_coordinate(self, coordinate, rvec, tvec):
         '''
@@ -97,24 +102,51 @@ class Locator:
         rvec: rvec to convert the coordinate
         tvec: tvec to convert the coordinate
         '''
-        # calculate rotational matrix
         rod, jac = Rodrigues(rvec)
-        tmp_matrix = np.c_[rod, tvec]
+        tmp_matrix = np.c_[rod, np.matrix.transpose(tvec)]
         extrinsic_matrix = np.r_[tmp_matrix, np.zeros((1,4))]
-        
-        return np.matmul(extrinsic_matrix, coordinate)
+        print(np.r_[coordinate, np.ones((1,1))])
+        print(extrinsic_matrix)
+        tmp_coordinate = np.matmul(extrinsic_matrix, np.r_[coordinate, np.ones((1,1))])
+
+        print("Coord", tmp_coordinate)
+        return np.delete(tmp_coordinate, 3, 0)
 
         
-    
+    def process_next_frame(self):
+        '''
+        Update and process the next frame.
 
-    def get_frame(self):
+        '''
         self.__update_frame()
+        # display frame for debugging
+        display_frame = self.frame.copy()
+        # draw detected markers 
+        cv2.aruco.drawDetectedMarkers(display_frame, self.corners, self.ids)
+        rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
+        # print(self.centres_camera)
+        if np.any(self.ids):
+            origin = np.zeros((3,1))
+            # print(origin)
+            
+            # print("Origin", origin)
+            for i in range(0, len(self.ids)):
+                # calculate which 
+                newCoords = self.__convert_camera_coordinate(origin, rvecs[i], tvecs[i])
+                print("ID: ", self.ids[i])
+                print("center", newCoords)
+        
+        
+        cv2.imshow('frame', display_frame)
+        
+
+    def get_current_frame(self):
         return self.frame
     
     
     def show_markers(self):
         '''
-        Display markers on the scene
+        Display markers on the scene. used for debugging purpose
         '''
         self.__update_frame()
         frame = self.frame.copy()
@@ -164,7 +196,7 @@ def main():
     # locator.calibrate()
     while True:
         # locator.test_markers()
-        locator.test_markers()
+        locator.process_next_frame()
 
         
         if cv2.waitKey(1) & 0xFF == ord('q'):

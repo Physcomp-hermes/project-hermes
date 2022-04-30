@@ -1,13 +1,11 @@
 import cv2, os
 import numpy as np
 
-from .person import Person
-
 # people_dict = {1:Person(1, True), 2:Person(2,True), 3:Person(3,False)}
 
 # TODO: calibration
 class Locator:
-    def __init__(self, people_dict):
+    def __init__(self, people_dict, ui_frame):
         '''
         Locator class to update what each people are looking at
         '''
@@ -19,10 +17,17 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(0)
+        self.cam = cv2.VideoCapture(1)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
+
+        self.ui_frame = ui_frame
+        # cam_width = self.cam.get(cv2.CAP_PROP_FRAME_WIDTH)
+        # cam_height = self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        # print("camera w: ", cam_width, "h: ", cam_height)
+        # self.ui_frame.config(width=cam_width, height=cam_height)
+
     
     def __del__(self):
         self.cam.release()
@@ -34,7 +39,11 @@ class Locator:
         Detects and saves corners and ids
         '''
         ret, self.frame = self.cam.read()
-        (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.aruco_dict, parameters=self.aruco_params)    
+        if ret:
+            (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.aruco_dict, parameters=self.aruco_params)
+        else:
+            print("Video reading failed")
+            
     
     def process_next_frame(self):
         """
@@ -65,7 +74,7 @@ class Locator:
 
             self.update_targets()
 
-        # cv2.imshow('frame', display_frame)
+        cv2.imshow('frame', display_frame)
     
     def update_targets(self):
         """
@@ -86,12 +95,9 @@ class Locator:
                     print(id_subject, " Facing ", id_target)
     
     def run_locator(self):
-        
-        while True:
-            self.process_next_frame()
-            
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+
+        self.process_next_frame()
+        self.ui_frame.after(50, self.run_locator)
 
 
 

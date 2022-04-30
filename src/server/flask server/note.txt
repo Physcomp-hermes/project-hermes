@@ -1,0 +1,17 @@
+table: People
+
+information:
+id,
+name,
+interests
+
+pip install flask flask_restx requests
+
+
+# restful api - get/post
+requests.post(f"http://127.0.0.1:5000/people/id=123&name=lee&interests=food")
+requests.get(f"http://127.0.0.1:5000/people/123")
+
+
+#
+

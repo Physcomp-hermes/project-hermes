@@ -1,9 +1,9 @@
 import cv2, os
 import numpy as np
 
-from person import Person
+from src.person import Person
 
-people_dict = {1:Person(1, 1, True), 2:Person(2,1,True), 3:Person(3,2,False)}
+# people_dict = {1:Person(1, 1, True), 2:Person(2,1,True), 3:Person(3,2,False)}
 
 # TODO: calibration
 class Locator:
@@ -65,7 +65,7 @@ class Locator:
 
             self.update_targets()
 
-        cv2.imshow('frame', display_frame)
+        # cv2.imshow('frame', display_frame)
     
     def update_targets(self):
         """
@@ -84,9 +84,14 @@ class Locator:
                 if subject.is_facing(target):
                     subject.set_facing(id_target)
                     print(id_subject, " Facing ", id_target)
-                
-        
     
+    def run_locator(self):
+        
+        while True:
+            self.process_next_frame()
+            
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
 
 
@@ -96,7 +101,7 @@ def calibrate():
     Code based on https://mecaruco2.readthedocs.io/en/latest/notebooks_rst/Aruco/sandbox/ludovic/aruco_calibration_rotation.html
     '''
     print("Calibrating camera.")
-    datadir = "../data/"
+    datadir = "./data/"
     aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
     # aruco_params = cv2.aruco.DetectorParameters_create()
     images = np.array([datadir + f for f in os.listdir(datadir) if f.endswith(".png") ])
@@ -142,7 +147,8 @@ def calibrate():
     print("Calibration complete")
     return camera_matrix, dist_coeffs
 
-def main():
+
+def main(people_dict):
     locator = Locator(people_dict)
     
     while True:

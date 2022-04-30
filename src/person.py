@@ -1,16 +1,16 @@
-from marker import Marker
+from src.marker import Marker
 # This is the class for each person during the event
 
 class Person:
-    def __init__(self, id, category, device=False):
+    def __init__(self, id, device=False):
         '''
         Initialise the person class
         id: ID of this person
         category: category (for prototyping purpose)
         '''
         self._id = id
-        self.category = category
         self.device = device
+        self.interests = []
         # marker associated with this person.
         self.marker = Marker()
         # whether this person is present in the scene
@@ -68,6 +68,8 @@ class Person:
             return 1
         else:
             return 0
-
+    
+    def add_interest(self, interest):
+        self.interests.append(interest)
 
 

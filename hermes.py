@@ -11,18 +11,16 @@ def main():
     This is the main function for hermes application. 
     """
 
+    
     ### initialisation
-
+    participants = {}
     # Do some initialisation initialisation   
     
     # Adding people for testing purposes
-    add_person(1,4, True)
-    add_person(2,4)
-    people = ["Person"]
+    
     # Start input thread. This thread will use to run UI and add people in the system.
     # DW about how to run threading for now. We can handle it at some point
     # The UI class should update 
-    strengths = [2,4,0,1]
     
     # Set up the server
     # server.start()

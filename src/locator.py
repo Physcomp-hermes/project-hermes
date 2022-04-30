@@ -1,10 +1,12 @@
 import cv2, os
 import numpy as np
-import marker
 
+from person import Person
+
+people_dict = {1:Person(1, 1, True), 2:Person(2,1,True), 3:Person(3,2,False)}
 
 class Locator:
-    def __init__(self, people_list):
+    def __init__(self, people_dict):
         '''
         Locator class to update what each people are looking at
         '''
@@ -13,8 +15,8 @@ class Locator:
         self.marker_size = 0.05
         self.aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
         self.aruco_params = cv2.aruco.DetectorParameters_create()
-        self.people_list = people_list
-        self.marker_dict = {}
+        self.people_dict = people_dict
+        # self.marker_dict = {}
         # camera stream that will be used 
         self.cam = cv2.VideoCapture(1)
         self.centres_camera = np.empty((1,))
@@ -31,14 +33,12 @@ class Locator:
         Detects and saves corners and ids
         '''
         ret, self.frame = self.cam.read()
-        (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.aruco_dict, parameters=self.aruco_params)
-        
+        (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(self.frame, self.aruco_dict, parameters=self.aruco_params)    
     
     def process_next_frame(self):
-        '''
+        """
         Update and process the next frame. Doesn't accept marker id 0
-
-        '''
+        """
         # TODO: Add sampling 
         # Debugging code
         self.__update_frame()
@@ -48,25 +48,28 @@ class Locator:
         cv2.aruco.drawDetectedMarkers(display_frame, self.corners, self.ids)
         rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
         
+        # Note: Marker id 0 doesn't work with np.any
         if np.any(self.ids):
-            # Marker id 0 doesn't work... 
 
             for i in range(0, len(self.ids)):
 
                 id = self.ids[i][0]
-                if id not in self.marker_dict:
-
-                    # put new marker in the dictionary
-                    self.marker_dict[id] = marker.Marker()
+                person = self.people_dict[id]
                 # update the location of this marker
-                self.marker_dict[id].update_location(rvecs[i], tvecs[i])
-                print("ID", id, "Centre ", self.marker_dict[id].get_location())        
+                person.marker.update_location(rvecs[i], tvecs[i])
+                person.presence = True
+                
+                
+
         cv2.imshow('frame', display_frame)
-        
-
-    def get_current_frame(self):
-        return self.frame
-
+    
+    def update_targets(self):
+        """
+        Update who each person is looking at
+        """
+        for id in self.people_dict:
+            print(id)
+    
 
 
 
@@ -76,7 +79,7 @@ def calibrate():
     Code based on https://mecaruco2.readthedocs.io/en/latest/notebooks_rst/Aruco/sandbox/ludovic/aruco_calibration_rotation.html
     '''
     print("Calibrating camera.")
-    datadir = "../../data/"
+    datadir = "../data/"
     aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
     # aruco_params = cv2.aruco.DetectorParameters_create()
     images = np.array([datadir + f for f in os.listdir(datadir) if f.endswith(".png") ])
@@ -123,11 +126,11 @@ def calibrate():
     return camera_matrix, dist_coeffs
 
 def main():
-    locator = Locator([])
+    locator = Locator(people_dict)
     
     while True:
         locator.process_next_frame()
-
+        print(people_dict[1].marker.get_location())
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 

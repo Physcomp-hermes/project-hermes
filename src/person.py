@@ -1,4 +1,4 @@
-from locator.marker import Marker
+from marker import Marker
 # This is the class for each person during the event
 
 class Person:
@@ -13,7 +13,8 @@ class Person:
         self.device = device
         # marker associated with this person.
         self.marker = Marker()
-        
+        # whether this person is present in the scene
+        self.present = False
         # This the person this percon is currently facing at. 
         # 0 means facing at no one
         self.facing = 0

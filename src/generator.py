@@ -9,7 +9,7 @@ import numpy as np
 markerDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
 
 # path for generated markers to be stored
-outputDir = "../../img"
+outputDir = "../img"
 
 def main():
     """

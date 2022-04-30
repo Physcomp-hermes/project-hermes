@@ -18,6 +18,8 @@ class Person:
         # This the person this percon is currently facing at. 
         # 0 means facing at no one
         self.facing = 0
+        # vibration strength
+        self.vib_strength = 0
 
     def has_device(self):
         '''

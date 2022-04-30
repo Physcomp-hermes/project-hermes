@@ -17,24 +17,16 @@ def main():
     window.title("Hermes")
     window.geometry('300x500')
 
-    frame_form = Frame(window, width=200)
-    frame_form.place(anchor="w")
-    frame_form.pack(expand=True, side=LEFT)
-    frame_cam = Frame(window)
-    participants = {} # Dictionary for participants
-    # Do some initialisation initialisation   
+    # Dictionary for participants
+    participants = {} 
     
-    # This is the application window
-    
-    # Adding people for testing purposes
-    
-    # Start input thread. This thread will use to run UI and add people in the system.
-    # DW about how to run threading for now. We can handle it at some point
-    # The UI class should update 
-    locator = Locator(participants, frame_cam)
+    # people locator
+    locator = Locator(participants, window)
+    # start locator loop
     locator.run_locator()
     # Set up the server
-    ui_run(frame_form, participants)
+    ui_run(window, participants)
+    
     # Start the UI
     # callbacks are attached to this window... sigh
     # it's an infinite loop btw

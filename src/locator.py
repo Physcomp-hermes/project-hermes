@@ -23,6 +23,7 @@ class Locator:
         self.camera_matrix, self.dist_coeffs = calibrate()
 
         self.ui_frame = ui_frame
+        self.fps = 20
         # cam_width = self.cam.get(cv2.CAP_PROP_FRAME_WIDTH)
         # cam_height = self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
         # print("camera w: ", cam_width, "h: ", cam_height)
@@ -95,9 +96,11 @@ class Locator:
                     print(id_subject, " Facing ", id_target)
     
     def run_locator(self):
-
+        """
+        Run locator. This function calls itself over the main ui window.
+        """
         self.process_next_frame()
-        self.ui_frame.after(50, self.run_locator)
+        self.ui_frame.after(1000/self.fps, self.run_locator)
 
 
 

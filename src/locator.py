@@ -1,9 +1,9 @@
 import cv2, os
 import numpy as np
 
-from src.person import Person
+from .person import Person
 
-# people_dict = {1:Person(1, 1, True), 2:Person(2,1,True), 3:Person(3,2,False)}
+# people_dict = {1:Person(1, True), 2:Person(2,True), 3:Person(3,False)}
 
 # TODO: calibration
 class Locator:

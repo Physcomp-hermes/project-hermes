@@ -1,10 +1,5 @@
 #importing other parts
-from ast import arg
-from socketserver import ThreadingUnixDatagramServer
-from wsgiref.validate import PartialIteratorWrapper
-from src.person import Person
-from src.ui import ui_run
-from src import Locator
+from src import Locator, Person
 from threading import Thread
 
 people_list = []
@@ -24,8 +19,9 @@ def main():
     # DW about how to run threading for now. We can handle it at some point
     # The UI class should update 
     locator = Locator(participants)
-    locator_thread = Thread(target=locator.run_locator)
-    locator_thread.start()
+    locator.run_locator()
+    # locator_thread = Thread(target=locator.run_locator)
+    # locator_thread.start()
     # Set up the server
     # ui_run(participants)
     # run_locator(participants)

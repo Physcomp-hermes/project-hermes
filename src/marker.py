@@ -23,21 +23,15 @@ class Marker:
         Calculate the angle between the front of the marke and given target coordinate.
         The target coordinate is also in camera coordinate system
         """
+
         front_norm = np.linalg.norm(self.vec_front)
-        target_norm = np.linalg.norm(target_coord)
-        angle_rad = np.arccos(np.dot(self.vec_front, target_coord) / (front_norm * target_norm))
+        target_vec = np.subtract(target_coord, self.centre_coord)
+        target_norm = np.linalg.norm(target_vec)
+        
+        angle_rad = np.arccos(np.dot(self.vec_front, target_vec) / (front_norm * target_norm))
         angle_deg = angle_rad * 180 / math.pi
         return angle_deg
     
-    def __calculate_vector(self, target_coord):
-        '''
-        Calculate 3d vector between centre of this marker and target coordinate.
-        The target coordinate should be given as camera coordinate 
-        returns a 1d array with 3 elements (x,y,z)
-        '''
-        vec = np.subtract(target_coord, self.centre_coord)
-        return np.transpose(vec)
-
     def get_location(self):
         '''
         Getter for centre coordinate of the marker
@@ -56,11 +50,12 @@ class Marker:
         tmp_matrix = np.c_[rod, np.matrix.transpose(tvec)]
         extrinsic_matrix = np.r_[tmp_matrix, np.zeros((1,4))]
         origin = [[0], [0], [0], [1]]
-        front = [[0], [1], [0], [0]]
+        front = [[0], [1], [0], [1]]
         # Update centre coordinate and frontal vector
         self.centre_coord = np.delete(np.matmul(extrinsic_matrix, origin), 3, 0)
         frontal_coord = np.delete(np.matmul(extrinsic_matrix, front), 3, 0)
-        self.vec_front = self.__calculate_vector(frontal_coord)
+        self.vec_front = np.subtract(frontal_coord, self.centre_coord)
+        self.vec_front = np.transpose(self.vec_front)
     
     def is_facing(self, coordinate):
         '''

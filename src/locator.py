@@ -5,6 +5,7 @@ from person import Person
 
 people_dict = {1:Person(1, 1, True), 2:Person(2,1,True), 3:Person(3,2,False)}
 
+# TODO: calibration
 class Locator:
     def __init__(self, people_dict):
         '''
@@ -18,7 +19,7 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(1)
+        self.cam = cv2.VideoCapture(0)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
@@ -47,28 +48,44 @@ class Locator:
         # draw detected markers 
         cv2.aruco.drawDetectedMarkers(display_frame, self.corners, self.ids)
         rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
-        
+        for id, person in self.people_dict.items():
+            # reset presence value
+            person.set_presence(False)
+            
         # Note: Marker id 0 doesn't work with np.any
         if np.any(self.ids):
 
             for i in range(0, len(self.ids)):
-
+                cv2.drawFrameAxes(display_frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i],0.1)
                 id = self.ids[i][0]
                 person = self.people_dict[id]
                 # update the location of this marker
                 person.marker.update_location(rvecs[i], tvecs[i])
-                person.presence = True
-                
-                
+                person.present = True
+
+            self.update_targets()
 
         cv2.imshow('frame', display_frame)
     
     def update_targets(self):
         """
-        Update who each person is looking at
+        Update who each person is looking at. Only considers participants present in the scene
         """
-        for id in self.people_dict:
-            print(id)
+        for id_subject in self.people_dict:
+            # Check for each of the markers. 
+            subject = self.people_dict[id_subject]
+            if not subject.present:
+                continue
+            for id_target in self.people_dict:
+                target = self.people_dict[id_target]
+                
+                if id_subject == id_target or not target.present:
+                    continue
+                if subject.is_facing(target):
+                    subject.set_facing(id_target)
+                    print(id_subject, " Facing ", id_target)
+                
+        
     
 
 
@@ -130,7 +147,7 @@ def main():
     
     while True:
         locator.process_next_frame()
-        print(people_dict[1].marker.get_location())
+        
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 

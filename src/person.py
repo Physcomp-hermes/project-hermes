@@ -8,7 +8,7 @@ class Person:
         id: ID of this person
         category: category (for prototyping purpose)
         '''
-        self.id = id
+        self._id = id
         self.category = category
         self.device = device
         # marker associated with this person.
@@ -18,13 +18,6 @@ class Person:
         # This the person this percon is currently facing at. 
         # 0 means facing at no one
         self.facing = 0
-
-    def set_facing(self, id):
-        '''
-        Update who this person is facing at
-        id: ID of the person this person is facing at
-        '''
-        self.facing = id
 
     def has_device(self):
         '''
@@ -36,6 +29,23 @@ class Person:
         else:
             return False
 
+    def set_facing(self, id):
+        '''
+        Update who this person is facing at
+        id: ID of the person this person is facing at
+        '''
+        self.facing = id
+    
+    def set_presence(self, presence):
+        self.present = presence
+
+    def is_facing(self, target):
+        """
+        Check if this person is facing the target person
+        """
+        if self.marker.is_facing(target.marker.get_location()):
+            return True
+        return False
     
     def get_facing(self):
         '''
@@ -47,7 +57,7 @@ class Person:
         '''
         Returns the id of this participant
         '''
-        return self.id
+        return self._id
     
     def get_commonality(self, target_category):
         '''

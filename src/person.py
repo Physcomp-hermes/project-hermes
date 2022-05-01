@@ -1,4 +1,4 @@
-from .marker import Marker
+from marker import Marker
 # This is the class for each person during the event
 
 class Person:

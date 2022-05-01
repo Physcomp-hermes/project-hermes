@@ -1,10 +1,8 @@
-from multiprocessing.sharedctypes import Value
 import tkinter.font as tkFont
 from tkinter import *
-from tkinter.ttk import Combobox
 from collections import OrderedDict
 
-from src.person import Person
+from person import Person
 
 
 
@@ -67,3 +65,14 @@ def ui_run(frame, people_dict, update_callback):
     
     # draw UI
     draw_ui(frame, field_dict, ui_callback)
+
+
+if __name__ == "__main__":
+    window = Tk()
+    window.title("Hermes")
+    window.geometry('300x500')
+    def callback_print():
+        print("Button pressed")
+    people = OrderedDict()
+    ui_run(window, people, callback_print)
+    window.mainloop()

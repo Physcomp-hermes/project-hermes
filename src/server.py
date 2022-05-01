@@ -38,6 +38,7 @@ def handle_client(conn, addr, strengths):
 
 
 def start(strengths):
+    print("[STARTING] server is starting...")
     server.listen()
     print(f"[LISTENING] Server is listening on {SERVER}")
     while True:
@@ -47,5 +48,5 @@ def start(strengths):
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
 
 
-print("[STARTING] server is starting...")
-start()
+
+# start()

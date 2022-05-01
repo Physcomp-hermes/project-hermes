@@ -26,13 +26,12 @@ def draw_ui(frame, field_dict, callback):
     list_id=("1", "2", "3", "4","5")
     list_category=("Arts", "Vehicles", "Beauty", "Fitness", "Business", "Electronics", "Finance", "Food & Drink", "Games", "Home", "Internet", "Jobs", "Education")
 
-    frame.pack(expand=True)
+    # frame.pack(expand=True)
     frame.grid_columnconfigure(0, weight=1)
     frame.grid_rowconfigure(0, weight=1)
 
     # title
-    label_title = Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2)
-    # label_title.place(x=150,y=53)
+    Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2)
 
     field_row = 1
     for labelText, content in field_dict.items():
@@ -47,7 +46,7 @@ def draw_ui(frame, field_dict, callback):
     Button(frame, text='Submit',font=f3, command=callback).grid(row = 5, columnspan=2)
 
 
-def ui_run(frame, people_dict):
+def ui_run(frame, people_dict, update_callback):
     
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
@@ -64,11 +63,7 @@ def ui_run(frame, people_dict):
         person.add_interest(field_dict["Interest 1"].get())
         person.add_interest(field_dict["Interest 2"].get())
         person.add_interest(field_dict["Interest 3"].get())
-        pass
+        update_callback()
     
     # draw UI
     draw_ui(frame, field_dict, ui_callback)
-
-
-if __name__ == "__main__":
-    ui_run()

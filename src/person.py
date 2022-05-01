@@ -10,7 +10,7 @@ class Person:
         '''
         self._id = id
         self.device = device
-        self.interests = []
+        self._interests = []
         # marker associated with this person.
         self.marker = Marker()
         # whether this person is present in the scene
@@ -19,7 +19,7 @@ class Person:
         # 0 means facing at no one
         self.facing = 0
         # vibration strength
-        self.vib_strength = 0
+        # self.vib_strength = 0
 
     def has_device(self):
         '''
@@ -30,6 +30,12 @@ class Person:
             return True
         else:
             return False
+
+    def get_facing(self):
+        '''
+        Returns the id of person this person is facing at
+        '''
+        return self.facing
 
     def set_facing(self, id):
         '''
@@ -49,29 +55,32 @@ class Person:
             return True
         return False
     
-    def get_facing(self):
-        '''
-        Returns the id of person this person is facing at
-        '''
-        return self.facing
-    
     def get_id(self):
         '''
         Returns the id of this participant
         '''
         return self._id
     
-    def get_commonality(self, target_category):
-        '''
-        Returns the signal strength 
-        '''
-        
-        if target_category == self.category:
-            return 1
-        else:
-            return 0
-    
     def add_interest(self, interest):
-        self.interests.append(interest)
+        self._interests.append(interest)
+    
+    def get_interests(self):
+        return self._interests.copy()
+    
+    def vib_strength(self, target):
+        """
+        calculate vibration strength between self and given person
+        target: a person instance
+        """
+        strength = 0
+        if self._id == target.get_id():
+            return strength
+
+        for my_interest in self._interests:
+            for target_interest in target.get_interests():
+                if my_interest == target_interest:
+                    strength += 1
+        
+        return strength
 
 

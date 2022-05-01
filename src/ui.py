@@ -29,19 +29,19 @@ def draw_ui(frame, field_dict, callback):
     frame.grid_rowconfigure(0, weight=1)
 
     # title
-    Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2)
+    Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2,pady=10)
 
     field_row = 1
     for labelText, content in field_dict.items():
-        Label(frame,text = labelText,font=f2).grid(row = field_row, column = 0)
+        Label(frame,text = labelText,font=f2).grid(row = field_row, column = 0,sticky=W, padx=60,pady=10)
         if labelText == "ID":
-            OptionMenu(frame, content, *list_id).grid(row = field_row, column= 1,sticky='ew')
+            OptionMenu(frame, content, *list_id).grid(row = field_row, column= 1,sticky=E,padx=60,pady=10)
         else:
-            OptionMenu(frame, content, *list_category).grid(row = field_row, column= 1,sticky='ew')
+            OptionMenu(frame, content, *list_category).grid(row = field_row, column= 1,sticky=E,padx=60,pady=10)
         field_row += 1
     
     # create a Submit Button and place into the window
-    Button(frame, text='Submit',font=f3, command=callback).grid(row = 5, columnspan=2)
+    Button(frame, text='Submit',font=f3, command=callback).grid(row = 5, columnspan=2, pady=60)
 
 
 def ui_run(frame, people_dict, update_callback):
@@ -70,7 +70,7 @@ def ui_run(frame, people_dict, update_callback):
 if __name__ == "__main__":
     window = Tk()
     window.title("Hermes")
-    window.geometry('300x500')
+    window.geometry('430x500')
     def callback_print():
         print("Button pressed")
     people = OrderedDict()

@@ -4,7 +4,7 @@ HEADER = 64
 PORT = 5050
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
-SERVER = "192.168.1.26"
+SERVER = "127.0.0.1"
 ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,10 +19,14 @@ def send(msg):
     client.send(message)
     print(client.recv(2048).decode(FORMAT))
 
-send("Hello World!")
+send("ID:2")
 input()
-send("Hello Everyone!")
+
+send("ID:2")
 input()
-send("Hello Tim!")
+send("ID:2")
+input()
+send("ID:2")
+input()
 
 send(DISCONNECT_MESSAGE)

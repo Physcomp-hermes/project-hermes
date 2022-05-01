@@ -1,8 +1,5 @@
 #importing other parts
-from concurrent.futures import thread
-from turtle import window_width
 from typing import OrderedDict
-from wsgiref.validate import PartialIteratorWrapper
 from src import Locator, Person
 from threading import Thread
 from tkinter import *

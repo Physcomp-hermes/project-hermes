@@ -34,8 +34,7 @@ def handle_client(conn, addr, strengths_list):
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT)
             if msg == DISCONNECT_MESSAGE:
-                connected = False
-                
+                connected = False    
             
             elif assert_msg():
                 # valid message

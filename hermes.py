@@ -22,15 +22,15 @@ def main():
     window = Tk()
     window.title("Hermes")
     window.geometry('300x500')
-    locator = Locator(participants, window)
-    server_thread = Thread(target=server_start, args=(vib_strengths, ))
+    # locator = Locator(participants, window)
+    # server_thread = Thread(target=server_start, args=(vib_strengths, ))
     # people locator
-    locator.run_locator()
+    # locator.run_locator()
 
     # set the ui
     ui_run(window, participants, update_strengths)
     # start the server
-    server_thread.start()
+    # server_thread.start()
     # Start the UI
     # callbacks are attached to this window... sigh
     # it's an infinite loop btw

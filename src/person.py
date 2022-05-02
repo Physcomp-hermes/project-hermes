@@ -18,8 +18,10 @@ class Person:
         # This the person this percon is currently facing at. 
         # 0 means facing at no one
         self.facing = 0
+        self.facing_history = [] # history of faced people
         # vibration strength
         self.vib_strength = 0
+        
 
     def has_device(self):
         '''
@@ -40,7 +42,7 @@ class Person:
     def set_facing(self, target):
         '''
         Update who this person is facing at. Skip still looking at same person
-        id: ID of the person this person is facing at
+        target: Person object this person is facing at
 
         '''
         prev_face = self.facing
@@ -57,19 +59,23 @@ class Person:
         """
         Check if this person is facing the target person
         """
-        if self.marker.is_facing(target.marker.get_location()):
-            # self.set_facing(target)
-            return True
-        else:
-            self.facing = 0
-            self.vib_strength = 0
-            return False
+        # if self.marker.is_facing(target.marker.get_location()):
+        #     # self.set_facing(target)
+        #     return True
+        # else:
+        #     self.facing = 0
+        #     self.vib_strength = 0
+        #     return False
+        return self.marker.is_facing(target.marker.get_location())
     
     def update_facing(self, target):
         """
         Check if this person is currently facing the target
         """
-        pass
+        if self.marker.is_facing(target.marker.get_location()):
+            pass
+        else:
+            print("Not facing target marker")
     
     def get_id(self):
         '''

@@ -1,6 +1,7 @@
 from typing import OrderedDict
 import cv2, os
 import numpy as np
+from scipy import stats 
 
 # people_dict = {1:Person(1, True), 2:Person(2,True), 3:Person(3,False)}
 
@@ -45,10 +46,13 @@ class Locator:
         else:
             print("Video reading failed")
             
-    def __update_targets(self):
+    def __get_facing(self):
         """
         Update who each person is looking at. Only considers participants present in the scene
+        returns a dictionary in the form of:
+        id: id of target
         """
+        facing_dict = {}
         for id_subject in self.people_dict:
             # Check for each of the markers. 
             subject = self.people_dict[id_subject]
@@ -59,57 +63,86 @@ class Locator:
                 
                 if id_subject == id_target or not target.present:
                     continue
+                # print(f"Checking {id_subject} and {id_target}")
                 if subject.is_facing(target):
+                    facing_dict[id_subject] = id_target
                     # print(id_subject, " Facing ", id_target)
-                    subject.set_facing(target)
+                    # subject.set_facing(target)
+        return facing_dict
 
     def __sample_frames(self, frames):
         """
         Sample video frames and return the 'facing' dictionary for people
         present in the scene
+        frames: Number of frames to be sampled
         """
         facing_dict = {}
+        # list to buffer facing 
+        facing_buffer = np.zeros((len(self.people_dict), frames))
         for i in range(frames):
             self.__update_frame()
+            rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(
+                self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
+            for id, person in self.people_dict.items():
+                person.set_presence(False)
+            # Note: Marker id 0 doesn't work with np.any
             if np.any(self.ids):
-                for id_wrapped in self.ids:
-                    id = id_wrapped[0]
-
-            pass
-
+                for j in range(len(self.ids)):
+                    id = self.ids[j][0]
+                    if id in self.people_dict:
+                        person = self.people_dict[id]
+                        person.marker.update_location(rvecs[j], tvecs[j])
+                        person.set_presence(True)
+            
+            frame_facing = self.__get_facing()
+            for key, value in frame_facing.items():
+                facing_buffer[key][i] = value
+                
+        # print(facing_buffer)
+        for key in self.people_dict:
+            mode = stats.mode(facing_buffer[key])
+            facing_dict[key] = int(mode[0][0])
+        # print(facing_dict)
         return facing_dict
 
     def __process_next_interval(self):
         """
         Update and process the next frame. Doesn't accept marker id 0
         """
-        # TODO: Add sampling 
+        facing_dict = self.__sample_frames(5)
+        for id, person in self.people_dict.items():
+            if id in facing_dict:
+                person.set_facing(self.people_dict[facing_dict[id]])
+                
+            
+            # reset presence value
+                
+        # facing_dict = self.__sample_frames(5)
+
         # Debugging code
-        self.__update_frame()
+        # self.__update_frame()
         # display frame for debugging
         display_frame = self.frame.copy()
         # draw detected markers 
         cv2.aruco.drawDetectedMarkers(display_frame, self.corners, self.ids)
-        rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
-        for id, person in self.people_dict.items():
-            # reset presence value
-            person.set_presence(False)
+        # rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
+        
             
         # Note: Marker id 0 doesn't work with np.any
-        if np.any(self.ids):
+        # if np.any(self.ids):
 
-            for i in range(len(self.ids)):
-                cv2.drawFrameAxes(display_frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i],0.1)
-                id = self.ids[i][0]
-                if id in self.people_dict:
-                    person = self.people_dict[id]
-                    # update the location of this marker
-                    person.marker.update_location(rvecs[i], tvecs[i])
-                    person.present = True
+        #     for i in range(len(self.ids)):
+        #         cv2.drawFrameAxes(display_frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i],0.1)
+        #         id = self.ids[i][0]
+        #         if id in self.people_dict:
+        #             person = self.people_dict[id]
+        #             # update the location of this marker
+        #             person.marker.update_location(rvecs[i], tvecs[i])
+        #             # person.present = True
 
-            self.__update_targets()
-            # self.print_strengths()
-
+        #     self.__update_targets()
+        #     # self.print_strengths()
+        # self.print_strengths()
         cv2.imshow('frame', display_frame)
                     
     

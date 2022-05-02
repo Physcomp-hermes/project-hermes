@@ -7,14 +7,18 @@ import threading
 
 HEADER = 64
 PORT = 5050
-SERVER = socket.gethostbyname(socket.gethostname())
+HOSTNAME = socket.gethostname()
+print("Hostname: ", HOSTNAME)
+# SERVER = socket.gethostbyname(socket.getfqdn())
+SERVER = '192.168.142.53'
 ADDR = (SERVER, PORT)
+# TADDR = (TSERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+print(ADDR)
 server.bind(ADDR)
-
 
 # option 1: client asking server, and server responding
 # Option 2: Server talking to client
@@ -27,22 +31,32 @@ def handle_client(conn, addr, strengths_list):
     while connected:
         
         # receive msg from client
-        msg_length = conn.recv(HEADER).decode(FORMAT)
-        if msg_length:
-            # process received message
-            # Message format: ID:n
-            msg_length = int(msg_length)
-            msg = conn.recv(msg_length).decode(FORMAT)
-            if msg == DISCONNECT_MESSAGE:
-                connected = False    
+        msg = conn.recv(HEADER).decode(FORMAT)
+        msg = int(msg)
+        print("[Received] ", msg)
+        if assert_msg():
+            strength = str(strengths_list[msg])
+            conn.send(strength.encode(FORMAT))
+            print("[Sent] ", strength)
+            connected = False
+        
+        # print("msg_length: ", msg_length)
+        # if msg_length:
+        #     # process received message
+        #     # Message format: ID:n
+        #     msg = int(msg_length)
+        #     # msg = conn.recv(msg_length).decode(FORMAT)
+        #     print("msg: ", msg)
+        #     if msg == DISCONNECT_MESSAGE:
+        #         connected = False    
             
-            elif assert_msg():
-                # valid message
-                client_id = int(msg[-1])
-                strength = str(strengths_list[client_id])
+        #     elif assert_msg():
+        #         # valid message
+        #         # client_id = int(msg[0])
+        #         strength = str(strengths_list[0])
 
-                conn.send(strength.encode(FORMAT))
-                pass            
+        #         connected = False
+                
     print(f"[DISCONNECTION] {addr} disconnected")
     conn.close()
 
@@ -53,6 +67,7 @@ def server_start(strengths):
     print("[STARTING] server is starting...")
     server.listen()
     print(f"[LISTENING] Server is listening on {SERVER}")
+    print(socket.gethostname())
     while True:
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr, strengths))

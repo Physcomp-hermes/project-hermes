@@ -31,11 +31,15 @@ def main():
     ui_run(window, participants, update_strengths)
     # start the server
     server_thread.start()
+    window.after(1000, inc_vib)
     # Start the UI
     # callbacks are attached to this window... sigh
     # it's an infinite loop btw
     window.mainloop()
     
+def inc_vib():
+    vib_strengths[2] += 1
+    print("vibration strength incremented")
 
 def update_strengths():
     """

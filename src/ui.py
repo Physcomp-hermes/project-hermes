@@ -2,7 +2,7 @@ import tkinter.font as tkFont
 from tkinter import *
 from collections import OrderedDict
 
-from person import Person
+from .person import Person
 
 
 

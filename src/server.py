@@ -4,6 +4,7 @@ from http import client
 from lzma import FORMAT_ALONE
 import socket
 import threading
+from .person import Person
 
 HEADER = 64
 PORT = 5050
@@ -22,7 +23,7 @@ server.bind(ADDR)
 
 # option 1: client asking server, and server responding
 # Option 2: Server talking to client
-def handle_client(conn, addr, strengths_list):
+def handle_client(conn, addr, people_dict):
     print(f"[NEW CONNECTION] {addr} connected.")
 
     # check id of the client
@@ -35,7 +36,7 @@ def handle_client(conn, addr, strengths_list):
         msg = int(msg)
         print("[Received] ", msg)
         if assert_msg():
-            strength = str(strengths_list[msg])
+            strength = str(people_dict[msg].get_strength())
             conn.send(strength.encode(FORMAT))
             print("[Sent] ", strength)
             connected = False
@@ -60,7 +61,7 @@ def handle_client(conn, addr, strengths_list):
     print(f"[DISCONNECTION] {addr} disconnected")
     conn.close()
 
-def server_start(strengths):
+def server_start(participants):
     """
     run the server
     """
@@ -70,7 +71,7 @@ def server_start(strengths):
     print(socket.gethostname())
     while True:
         conn, addr = server.accept()
-        thread = threading.Thread(target=handle_client, args=(conn, addr, strengths))
+        thread = threading.Thread(target=handle_client, args=(conn, addr, participants))
         thread.start()
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 2}")
 

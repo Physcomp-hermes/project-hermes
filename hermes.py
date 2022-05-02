@@ -27,7 +27,7 @@ def main():
     ### initialisation
     # UI initialisation
     locator = Locator(participants, window)
-    server_thread = Thread(target=server_start, args=(vib_strengths, ))
+    server_thread = Thread(target=server_start, args=(participants, ))
     # people locator
     locator.run_locator()
 
@@ -61,12 +61,12 @@ def update_strengths():
     update vibration strengths between people
     """
     vib_strength_matrix.clear()
-    
+    return
     for this_id, this_person in participants.items():
         sub_strengths = []
         for target_id, target_person in participants.items():
             # vib_strengths[this_id][target_id] = this_person.vib_strength(target_person)
-            sub_strengths.append(this_person.vib_strength(target_person))
+            sub_strengths.append(this_person.calc_strength(target_person))
         vib_strength_matrix.append(sub_strengths.copy())
     print(vib_strength_matrix)    
     

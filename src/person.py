@@ -19,7 +19,7 @@ class Person:
         # 0 means facing at no one
         self.facing = 0
         # vibration strength
-        # self.vib_strength = 0
+        self.vib_strength = 0
 
     def has_device(self):
         '''
@@ -37,12 +37,18 @@ class Person:
         '''
         return self.facing
 
-    def set_facing(self, id):
+    def set_facing(self, target):
         '''
-        Update who this person is facing at
+        Update who this person is facing at. Skip still looking at same person
         id: ID of the person this person is facing at
+
         '''
-        self.facing = id
+        prev_face = self.facing
+        if prev_face == target.get_id():
+            return
+        else:
+            self.facing = target.get_id()
+            self.vib_strength = self.calc_strength(target)
     
     def set_presence(self, presence):
         self.present = presence
@@ -52,8 +58,12 @@ class Person:
         Check if this person is facing the target person
         """
         if self.marker.is_facing(target.marker.get_location()):
+            self.set_facing(target)
             return True
-        return False
+        else:
+            self.facing = 0
+            self.vib_strength = 0
+            return False
     
     def get_id(self):
         '''
@@ -67,7 +77,10 @@ class Person:
     def get_interests(self):
         return self._interests.copy()
     
-    def vib_strength(self, target):
+    def get_strength(self):
+        return self.vib_strength
+    
+    def calc_strength(self, target):
         """
         calculate vibration strength between self and given person
         target: a person instance
@@ -80,7 +93,10 @@ class Person:
             for target_interest in target.get_interests():
                 if my_interest == target_interest:
                     strength += 1
+        # self.vib_strength = strength
         
+        # print(f"P {self._id} has strength {strength}")
         return strength
+        # return strength
 
 

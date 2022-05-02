@@ -10,7 +10,7 @@ class Marker:
     
     def __init__(self):
         # width of the marker in metres
-        self.width = 0.05
+        self.width = 0.1
         # angle threshold to determine whether it's facing something or not
         self.face_threshold = 10
         # centre coordinate 
@@ -30,6 +30,7 @@ class Marker:
         
         angle_rad = np.arccos(np.dot(self.vec_front, target_vec) / (front_norm * target_norm))
         angle_deg = angle_rad * 180 / math.pi
+        # print(angle_deg)
         return angle_deg
     
     def get_location(self):
@@ -62,7 +63,7 @@ class Marker:
         Function to tell if it's facing other marker.
         coordinate: target coordinate to check
         '''
-
+        
         return self.__calculate_angle(coordinate) < self.face_threshold
 
 

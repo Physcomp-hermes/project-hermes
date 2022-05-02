@@ -1,3 +1,4 @@
+from typing import OrderedDict
 import cv2, os
 import numpy as np
 
@@ -11,13 +12,13 @@ class Locator:
         '''
         print("Locator initiated...\n")
         # Marker parameters
-        self.marker_size = 0.05
+        self.marker_size = 0.1
         self.aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
         self.aruco_params = cv2.aruco.DetectorParameters_create()
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(0)
+        self.cam = cv2.VideoCapture(1)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
@@ -67,12 +68,14 @@ class Locator:
             for i in range(0, len(self.ids)):
                 cv2.drawFrameAxes(display_frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i],0.1)
                 id = self.ids[i][0]
-                person = self.people_dict[id]
-                # update the location of this marker
-                person.marker.update_location(rvecs[i], tvecs[i])
-                person.present = True
+                if id in self.people_dict:
+                    person = self.people_dict[id]
+                    # update the location of this marker
+                    person.marker.update_location(rvecs[i], tvecs[i])
+                    person.present = True
 
             self.update_targets()
+            self.print_strengths()
 
         cv2.imshow('frame', display_frame)
     
@@ -91,8 +94,9 @@ class Locator:
                 if id_subject == id_target or not target.present:
                     continue
                 if subject.is_facing(target):
-                    subject.set_facing(id_target)
-                    print(id_subject, " Facing ", id_target)
+                    # print(id_subject, " Facing ", id_target)
+                    subject.set_facing(target)
+                    
     
     def run_locator(self):
         """
@@ -100,7 +104,26 @@ class Locator:
         """
         self.process_next_frame()
         self.ui_frame.after(100, self.run_locator)
+    
+    def show_markers(self):
+        frame = self.__update_frame()
+        cv2.aruco.drawDetectedMarkers(frame, self.corners, self.ids)
+        cv2.imshow("Frame", frame)
+    
+    def print_strengths(self):
+        strengths = "[Strengths: "
+        facing = "[Facing: "
+        for id, person in self.people_dict.items():
+            strengths += str(person.get_strength())
+            strengths += " | "
+            facing += str(person.get_facing())
+            facing += " | "
+        strengths += " ]"
+        facing += " ]"
+        print(strengths)
+        print(facing)
 
+            
 
 
 def calibrate():
@@ -156,11 +179,12 @@ def calibrate():
     return camera_matrix, dist_coeffs
 
 
-def main(people_dict):
+def main():
+    people_dict = OrderedDict()
     locator = Locator(people_dict)
     
     while True:
-        locator.process_next_frame()
+        locator.show_markers()
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

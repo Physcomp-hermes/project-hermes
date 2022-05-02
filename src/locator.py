@@ -99,7 +99,7 @@ class Locator:
         Run locator. This function calls itself over the main ui window.
         """
         self.process_next_frame()
-        self.ui_frame.after(50, self.run_locator)
+        self.ui_frame.after(100, self.run_locator)
 
 
 

@@ -48,7 +48,7 @@ def ui_run(frame, people_dict, update_callback):
     
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
-        ("ID", IntVar(frame)),
+        ("ID", IntVar(frame,1)),
         ("Interest 1", StringVar(frame)),
         ("Interest 2", StringVar(frame)),
         ("Interest 3", StringVar(frame))

@@ -24,7 +24,7 @@ server.bind(ADDR)
 # option 1: client asking server, and server responding
 # Option 2: Server talking to client
 def handle_client(conn, addr, people_dict):
-    print(f"[NEW CONNECTION] {addr} connected.")
+    # print(f"[NEW CONNECTION] {addr} connected.")
 
     # check id of the client
     connected = True
@@ -58,7 +58,7 @@ def handle_client(conn, addr, people_dict):
 
         #         connected = False
                 
-    print(f"[DISCONNECTION] {addr} disconnected")
+    # print(f"[DISCONNECTION] {addr} disconnected")
     conn.close()
 
 def server_start(participants):

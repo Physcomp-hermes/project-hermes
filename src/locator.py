@@ -45,8 +45,41 @@ class Locator:
         else:
             print("Video reading failed")
             
-    
-    def process_next_frame(self):
+    def __update_targets(self):
+        """
+        Update who each person is looking at. Only considers participants present in the scene
+        """
+        for id_subject in self.people_dict:
+            # Check for each of the markers. 
+            subject = self.people_dict[id_subject]
+            if not subject.present:
+                continue
+            for id_target in self.people_dict:
+                target = self.people_dict[id_target]
+                
+                if id_subject == id_target or not target.present:
+                    continue
+                if subject.is_facing(target):
+                    # print(id_subject, " Facing ", id_target)
+                    subject.set_facing(target)
+
+    def __sample_frames(self, frames):
+        """
+        Sample video frames and return the 'facing' dictionary for people
+        present in the scene
+        """
+        facing_dict = {}
+        for i in range(frames):
+            self.__update_frame()
+            if np.any(self.ids):
+                for id_wrapped in self.ids:
+                    id = id_wrapped[0]
+
+            pass
+
+        return facing_dict
+
+    def __process_next_interval(self):
         """
         Update and process the next frame. Doesn't accept marker id 0
         """
@@ -65,7 +98,7 @@ class Locator:
         # Note: Marker id 0 doesn't work with np.any
         if np.any(self.ids):
 
-            for i in range(0, len(self.ids)):
+            for i in range(len(self.ids)):
                 cv2.drawFrameAxes(display_frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i],0.1)
                 id = self.ids[i][0]
                 if id in self.people_dict:
@@ -74,35 +107,17 @@ class Locator:
                     person.marker.update_location(rvecs[i], tvecs[i])
                     person.present = True
 
-            self.update_targets()
-            self.print_strengths()
+            self.__update_targets()
+            # self.print_strengths()
 
         cv2.imshow('frame', display_frame)
-    
-    def update_targets(self):
-        """
-        Update who each person is looking at. Only considers participants present in the scene
-        """
-        for id_subject in self.people_dict:
-            # Check for each of the markers. 
-            subject = self.people_dict[id_subject]
-            if not subject.present:
-                continue
-            for id_target in self.people_dict:
-                target = self.people_dict[id_target]
-                
-                if id_subject == id_target or not target.present:
-                    continue
-                if subject.is_facing(target):
-                    # print(id_subject, " Facing ", id_target)
-                    subject.set_facing(target)
                     
     
     def run_locator(self):
         """
         Run locator. This function calls itself over the main ui window.
         """
-        self.process_next_frame()
+        self.__process_next_interval()
         self.ui_frame.after(100, self.run_locator)
     
     def show_markers(self):

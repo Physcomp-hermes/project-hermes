@@ -58,12 +58,18 @@ class Person:
         Check if this person is facing the target person
         """
         if self.marker.is_facing(target.marker.get_location()):
-            self.set_facing(target)
+            # self.set_facing(target)
             return True
         else:
             self.facing = 0
             self.vib_strength = 0
             return False
+    
+    def update_facing(self, target):
+        """
+        Check if this person is currently facing the target
+        """
+        pass
     
     def get_id(self):
         '''

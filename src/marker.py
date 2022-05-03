@@ -12,7 +12,7 @@ class Marker:
         # width of the marker in metres
         self.width = 0.1
         # angle threshold to determine whether it's facing something or not
-        self.face_threshold = 10
+        self.face_threshold = 30
         # centre coordinate 
         self.centre_coord = np.zeros(3)
         # frontal vector

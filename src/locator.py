@@ -19,7 +19,7 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(1)
+        self.cam = cv2.VideoCapture(0)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
@@ -151,6 +151,7 @@ class Locator:
         Run locator. This function calls itself over the main ui window.
         """
         self.__process_next_interval()
+        self.print_strengths()
         self.ui_frame.after(100, self.run_locator)
     
     def show_markers(self):
@@ -162,13 +163,15 @@ class Locator:
         strengths = "[Strengths: "
         facing = "[Facing: "
         for id, person in self.people_dict.items():
+            if id == 0:
+                continue
             strengths += str(person.get_strength())
             strengths += " | "
             facing += str(person.get_facing())
             facing += " | "
         strengths += " ]"
         facing += " ]"
-        print(strengths)
+        # print(strengths)
         print(facing)
 
             

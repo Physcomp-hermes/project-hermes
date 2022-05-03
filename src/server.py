@@ -34,7 +34,7 @@ def handle_client(conn, addr, people_dict):
         # receive msg from client
         msg = conn.recv(HEADER).decode(FORMAT)
         msg = int(msg)
-        print("[Received] ", msg)
+        # print("[Received] ", msg)
         if assert_msg():
             strength = str(people_dict[msg].get_strength())
             conn.send(strength.encode(FORMAT))
@@ -73,7 +73,7 @@ def server_start(participants):
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr, participants))
         thread.start()
-        print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 2}")
+        # print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 2}")
 
 
 def assert_msg():

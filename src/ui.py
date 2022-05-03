@@ -61,6 +61,7 @@ def ui_run(frame, people_dict, update_callback):
         person.add_interest(field_dict["Interest 1"].get())
         person.add_interest(field_dict["Interest 2"].get())
         person.add_interest(field_dict["Interest 3"].get())
+        print(f"Person {person.get_id()} added to system")
         update_callback()
     
     # draw UI

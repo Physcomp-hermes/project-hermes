@@ -1,15 +1,16 @@
 from .marker import Marker
 # This is the class for each person during the event
+# This class is used to store the information of people in the event.
 
 class Person:
-    def __init__(self, id, device=False):
+    def __init__(self, id):
         '''
         Initialise the person class
         id: ID of this person
         category: category (for prototyping purpose)
         '''
         self._id = id
-        self.device = device
+        # list that stores interests. This would need to be modified
         self._interests = []
         # marker associated with this person.
         self.marker = Marker()
@@ -18,20 +19,9 @@ class Person:
         # This the person this percon is currently facing at. 
         # 0 means facing at no one
         self.facing = 0
-        self.facing_history = [] # history of faced people
         # vibration strength
         self.vib_strength = 0
         
-
-    def has_device(self):
-        '''
-        Returns true if this person has device
-        return false if doesn't
-        '''
-        if self.device:
-            return True
-        else:
-            return False
 
     def get_facing(self):
         '''
@@ -59,13 +49,6 @@ class Person:
         """
         Check if this person is facing the target person
         """
-        # if self.marker.is_facing(target.marker.get_location()):
-        #     # self.set_facing(target)
-        #     return True
-        # else:
-        #     self.facing = 0
-        #     self.vib_strength = 0
-        #     return False
         return self.marker.is_facing(target.marker.get_location())
     
     def update_facing(self, target):
@@ -105,10 +88,7 @@ class Person:
             for target_interest in target.get_interests():
                 if my_interest == target_interest:
                     strength += 1
-        # self.vib_strength = strength
         
-        # print(f"P {self._id} has strength {strength}")
         return strength
-        # return strength
 
 

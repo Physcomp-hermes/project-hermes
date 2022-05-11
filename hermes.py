@@ -23,29 +23,27 @@ def main():
     """
     # start()
     ### initialisation
+    participant_init()
     # UI initialisation
     locator = Locator(participants, window)
     server_thread = Thread(target=server_start, args=(participants, ))
-    # people locator
     locator.run_locator()
-
+    ui_run(window, participants)
+    # start the server
+    server_thread.start()
+    
+    # callbacks are attached to this window... sigh
+    # it's an infinite loop btw
+    window.mainloop()
+    
+def participant_init():
     # placeholder for participant 0
     # Used because system currently doesn't recognise marker 1
-    
     person = Person(0)
     participants[person.get_id()] = person
     person.add_interest(" ")
     person.add_interest(" ")
     person.add_interest(" ")
 
-    # set the ui
-    ui_run(window, participants)
-    # start the server
-    server_thread.start()
-    # Start the UI
-    # callbacks are attached to this window... sigh
-    # it's an infinite loop btw
-    window.mainloop()
-    
 if __name__ == "__main__":
     main()

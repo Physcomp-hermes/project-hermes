@@ -3,7 +3,6 @@ import cv2, os
 import numpy as np
 from scipy import stats 
 
-# people_dict = {1:Person(1, True), 2:Person(2,True), 3:Person(3,False)}
 
 # TODO: calibration
 class Locator:

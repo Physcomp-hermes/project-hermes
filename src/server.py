@@ -6,6 +6,7 @@ import socket
 import threading
 from .person import Person
 
+# TODO: Send and receive more information
 HEADER = 64
 PORT = 5050
 HOSTNAME = socket.gethostname()
@@ -44,7 +45,7 @@ def handle_client(conn, addr, people_dict):
 
 def server_start(participants):
     """
-    run the server
+    run the server. Currently, the server starts a thread that handles the request from the client.
     """
     print("[STARTING] server is starting...")
     server.listen()

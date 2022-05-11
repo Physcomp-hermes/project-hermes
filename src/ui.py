@@ -14,7 +14,6 @@ def draw_ui(frame, field_dict, callback):
     callback: callback function to be executed when button is clicked
     """
     
-
     # set font design
     # TODO: Include the style in repository so it works on other devices too
     f1 = tkFont.Font(family='URW Gothic L', size=20)
@@ -46,8 +45,13 @@ def draw_ui(frame, field_dict, callback):
 
 
 def ui_run(frame, people_dict):
-    
+    '''
+    Run the UI. The window main loop needs to be started from somewhere else. 
+    frame: Tkinter object that this UI is in
+    people_dict: people dictionary to save the user data.
+    '''
     #initialise dictionary used to save variable
+    # it is ordered dictionary because the order is important when 
     field_dict = OrderedDict([
         ("ID", IntVar(frame,1)),
         ("Interest 1", StringVar(frame)),
@@ -63,7 +67,6 @@ def ui_run(frame, people_dict):
         person.add_interest(field_dict["Interest 2"].get())
         person.add_interest(field_dict["Interest 3"].get())
         print(f"Person {person.get_id()} added to system")
-        
     
     # draw UI
     draw_ui(frame, field_dict, ui_callback)

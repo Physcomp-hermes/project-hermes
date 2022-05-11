@@ -1,5 +1,6 @@
 import socket
 
+# This file is used to test the server without the device
 HEADER = 64
 PORT = 5050
 FORMAT = 'utf-8'

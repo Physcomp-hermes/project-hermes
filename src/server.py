@@ -24,7 +24,7 @@ server.bind(ADDR)
 # option 1: client asking server, and server responding
 # Option 2: Server talking to client
 def handle_client(conn, addr, people_dict):
-    # print(f"[NEW CONNECTION] {addr} connected.")
+    print(f"[NEW CONNECTION] {addr} connected.")
 
     # check id of the client
     connected = True
@@ -34,31 +34,12 @@ def handle_client(conn, addr, people_dict):
         # receive msg from client
         msg = conn.recv(HEADER).decode(FORMAT)
         msg = int(msg)
-        # print("[Received] ", msg)
         if assert_msg():
             strength = str(people_dict[msg].get_strength())
             conn.send(strength.encode(FORMAT))
             print("[Sent] ", strength)
             connected = False
         
-        # print("msg_length: ", msg_length)
-        # if msg_length:
-        #     # process received message
-        #     # Message format: ID:n
-        #     msg = int(msg_length)
-        #     # msg = conn.recv(msg_length).decode(FORMAT)
-        #     print("msg: ", msg)
-        #     if msg == DISCONNECT_MESSAGE:
-        #         connected = False    
-            
-        #     elif assert_msg():
-        #         # valid message
-        #         # client_id = int(msg[0])
-        #         strength = str(strengths_list[0])
-
-        #         connected = False
-                
-    # print(f"[DISCONNECTION] {addr} disconnected")
     conn.close()
 
 def server_start(participants):

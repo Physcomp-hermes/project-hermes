@@ -114,35 +114,12 @@ class Locator:
             if id in facing_dict:
                 person.set_facing(self.people_dict[facing_dict[id]])
                 
-            
-            # reset presence value
-                
-        # facing_dict = self.__sample_frames(5)
-
-        # Debugging code
-        # self.__update_frame()
-        # display frame for debugging
         display_frame = self.frame.copy()
         # draw detected markers 
         cv2.aruco.drawDetectedMarkers(display_frame, self.corners, self.ids)
         # rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
         
             
-        # Note: Marker id 0 doesn't work with np.any
-        # if np.any(self.ids):
-
-        #     for i in range(len(self.ids)):
-        #         cv2.drawFrameAxes(display_frame, self.camera_matrix, self.dist_coeffs, rvecs[i], tvecs[i],0.1)
-        #         id = self.ids[i][0]
-        #         if id in self.people_dict:
-        #             person = self.people_dict[id]
-        #             # update the location of this marker
-        #             person.marker.update_location(rvecs[i], tvecs[i])
-        #             # person.present = True
-
-        #     self.__update_targets()
-        #     # self.print_strengths()
-        # self.print_strengths()
         cv2.imshow('frame', display_frame)
                     
     

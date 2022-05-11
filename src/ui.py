@@ -16,6 +16,7 @@ def draw_ui(frame, field_dict, callback):
     
 
     # set font design
+    # TODO: Include the style in repository so it works on other devices too
     f1 = tkFont.Font(family='URW Gothic L', size=20)
     f2 = tkFont.Font(family='Ubuntu Mono', size=12)
     f3 = tkFont.Font(family='Sawasdee', size=11)
@@ -44,7 +45,7 @@ def draw_ui(frame, field_dict, callback):
     Button(frame, text='Submit',font=f3, command=callback).grid(row = 5, columnspan=2, pady=60,ipadx=20,ipady=5)
 
 
-def ui_run(frame, people_dict, update_callback):
+def ui_run(frame, people_dict):
     
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
@@ -62,7 +63,7 @@ def ui_run(frame, people_dict, update_callback):
         person.add_interest(field_dict["Interest 2"].get())
         person.add_interest(field_dict["Interest 3"].get())
         print(f"Person {person.get_id()} added to system")
-        update_callback()
+        
     
     # draw UI
     draw_ui(frame, field_dict, ui_callback)

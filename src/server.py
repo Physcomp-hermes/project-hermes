@@ -26,7 +26,7 @@ server.bind(ADDR)
 # Option 2: Server talking to client
 def handle_client(conn, addr, people_dict):
     print(f"[NEW CONNECTION] {addr} connected.")
-
+    
     # check id of the client
     connected = True
     

@@ -12,7 +12,7 @@ from src import server_start
 participants = OrderedDict()
 
 # List containig current vibration strength of each participants
-vib_strengths = [0, 1, 2]
+# vib_strengths = [0, 1, 2]
 
 window = Tk()
 window.title("Hermes")

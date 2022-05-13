@@ -3,18 +3,13 @@ Main repo for Hermes project 2022
 
 
 ## Installation
-This application requires number of libraries to be installed. For installation, you can use virtual environment using conda, or just install them using homebrew.
+This application requires number of libraries to be installed. For installation, you can use virtual environment using conda, or just install them using pip.
 
-Things to be installed:
-opencv, tkinter, scipy
-
-For opencv:
+Using pip3, install following libraries
 '''
-pip install opencv-contrib-python
-'''
-
-'''
-pip install scipy
+pip3 install opencv-contrib-python
+pip3 install scipy
+pip3 install tk
 '''
 
 ## Running

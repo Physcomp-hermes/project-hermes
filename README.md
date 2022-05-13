@@ -10,7 +10,7 @@ opencv, tkinter, scipy
 
 For opencv:
 '''
-pip install opencv-python
+pip install opencv-contrib-python
 '''
 
 '''

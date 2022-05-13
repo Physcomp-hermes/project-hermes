@@ -1,7 +1,7 @@
 # Mac DS
 .DS_Store
 #ignored files
-data/
+#data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

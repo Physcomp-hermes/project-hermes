@@ -12,7 +12,7 @@ PORT = 5050
 HOSTNAME = socket.gethostname()
 print("Hostname: ", HOSTNAME)
 # SERVER = socket.gethostbyname(socket.getfqdn())
-SERVER = '192.168.142.53'
+SERVER = '100.94.112.135' 
 ADDR = (SERVER, PORT)
 # TADDR = (TSERVER, PORT)
 FORMAT = 'utf-8'

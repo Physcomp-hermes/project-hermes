@@ -55,7 +55,7 @@ def draw_ui(frame, field_dict, callback):
     Button(frame, text='Submit',font=f3, command=callback).grid(row = 6, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
 
 
-def ui_run(frame, people_dict, update_callback):
+def ui_run(frame, people_dict):
     
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
@@ -74,7 +74,6 @@ def ui_run(frame, people_dict, update_callback):
         person.add_interest(field_dict["Major"].get())
         person.add_interest(field_dict["Library in campus"].get())
         person.add_interest(field_dict["Coffee in campus"].get())
-        update_callback()
     
     # draw UI
     draw_ui(frame, field_dict, ui_callback)

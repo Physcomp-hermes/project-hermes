@@ -18,7 +18,7 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(0)
+        self.cam = cv2.VideoCapture(1)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()

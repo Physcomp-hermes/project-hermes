@@ -39,6 +39,10 @@ def handle_client(conn, addr, people_dict):
             strength = str(people_dict[msg].get_strength())
             conn.send(strength.encode(FORMAT))
             print("[Sent] ", strength)
+            # return color 
+            color = str(people_dict[msg].get_color())
+            conn.send(color.encode(FORMAT))
+            print("[Sent] ", color)
             connected = False
         
     conn.close()

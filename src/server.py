@@ -31,20 +31,31 @@ def handle_client(conn, addr, people_dict):
     connected = True
     
     while connected:
-        
+        # check whether it's a request for colour or upate strength
+        # Colour communication: C-[id]. 
+        # Example: C-1 for colour of the first one
+        # Vibration communicaiton: V-[id]
+        # Example: V-2 for vibration of second device
+
         # receive msg from client
-        msg = conn.recv(HEADER).decode(FORMAT)
-        msg = int(msg)
-        if assert_msg():
-            strength = str(people_dict[msg].get_strength())
-            conn.send(strength.encode(FORMAT))
-            print("[Sent] ", strength)
-            # return color 
-            # The colour is hard coded in the device. Just send the index to the device.
+        msg = conn.recv(HEADER).decode(FORMAT).split("-")
+        device_id = int(msg[1])
+        if msg[0] == "C":
+            # Send colour to the device
+            # Colour is sent as a string.. for now
             color = str(people_dict[msg].get_color())
             conn.send(color.encode(FORMAT))
             print("[Sent] ", color)
-            connected = False
+        
+        elif msg[0] == "V":
+            #
+            strength = str(people_dict[msg].get_strength())
+            conn.send(strength.encode(FORMAT))
+            print("[Sent] ", strength)
+        
+        else:
+            print("Wrong communication")
+        connected = False
         
     conn.close()
 

@@ -40,24 +40,24 @@ def draw_ui(frame, field_dict, callback):
         Label(frame,text = labelText, font=f2).grid(sticky=W, padx=(55,0),pady=(5,0))
         if labelText == "ID":
             optionMenu = OptionMenu(frame, content, *list_id)
-            optionMenu.config(width=120)
+            optionMenu.config(width=50)
             optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         
         if labelText == "Year level":
             optionMenu = OptionMenu(frame, content, *list_category_1)
-            optionMenu.config(width=120)
+            optionMenu.config(width=50)
             optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         if labelText == "Major":
             optionMenu = OptionMenu(frame, content, *list_category_2)
-            optionMenu.config(width=120)
+            optionMenu.config(width=50)
             optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         if labelText == "Library in campus":
             optionMenu = OptionMenu(frame, content, *list_category_3)
-            optionMenu.config(width=120)
+            optionMenu.config(width=50)
             optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         elif labelText == "Coffee in campus":
             optionMenu = OptionMenu(frame, content, *list_category_4)
-            optionMenu.config(width=120)
+            optionMenu.config(width=50)
             optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         field_row += 1
 

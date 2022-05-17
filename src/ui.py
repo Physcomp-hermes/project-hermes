@@ -1,3 +1,4 @@
+import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import *
 from collections import OrderedDict
@@ -16,13 +17,16 @@ def draw_ui(frame, field_dict, callback):
     
 
     # set font design
-    f1 = tkFont.Font(family='URW Gothic L', size=20)
-    f2 = tkFont.Font(family='Ubuntu Mono', size=12)
-    f3 = tkFont.Font(family='Sawasdee', size=11)
+    f1 = tkFont.Font(family="URW Gothic L", size=20)
+    f2 = tkFont.Font(family="Ubuntu Mono", size=12)
+    f3 = tkFont.Font(family="Sawasdee", size=11)
 
     # list of interest category
     list_id=("1", "2", "3", "4","5")
-    list_category=("Arts", "Vehicles", "Beauty", "Fitness", "Business", "Electronics", "Finance", "Food & Drink", "Games", "Home", "Internet", "Jobs", "Education")
+    list_category_1=("First", "Second", "Third & after", "Postgrad")
+    list_category_2=("Computer science", "Electrical engineering", "Information technology", "Mechatronics engineering", "Software engineering", "Other")
+    list_category_3=("Architecture library", "BSL library", "Central library", "Dorothy hill", "Law library")
+    list_category_4=("Bagel boys", "Beans engineered", "Darwins", "Lakeside cafe", "Merlos in great court", "Nano cafe", "Phiyzz cafe", "Red bull", "The one in mains")
 
     # frame.pack(expand=True)
     frame.grid_columnconfigure(0, weight=1)
@@ -33,15 +37,22 @@ def draw_ui(frame, field_dict, callback):
 
     field_row = 1
     for labelText, content in field_dict.items():
-        Label(frame,text = labelText,font=f2).grid(row = field_row, column = 0,sticky=W, padx=60,pady=10)
+        Label(frame,text = labelText, font=f2).grid(row = field_row, column = 0,sticky=W, padx=(55,0),pady=10)
         if labelText == "ID":
-            OptionMenu(frame, content, *list_id).grid(row = field_row, column= 1,sticky=E,padx=60,pady=10,ipadx=2)
-        else:
-            OptionMenu(frame, content, *list_category).grid(row = field_row, column= 1,sticky=E,padx=60,pady=10,ipadx=5)
+            OptionMenu(frame, content, *list_id).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=2)
+        
+        if labelText == "1":
+            OptionMenu(frame, content, *list_category_1).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
+        if labelText == "2":
+            OptionMenu(frame, content, *list_category_2).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
+        if labelText == "3":
+            OptionMenu(frame, content, *list_category_3).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
+        elif labelText == "4":
+            OptionMenu(frame, content, *list_category_4).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
         field_row += 1
     
     # create a Submit Button and place into the window
-    Button(frame, text='Submit',font=f3, command=callback).grid(row = 5, columnspan=2, pady=60,ipadx=20,ipady=5)
+    Button(frame, text='Submit',font=f3, command=callback).grid(row = 6, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
 
 
 def ui_run(frame, people_dict, update_callback):
@@ -49,9 +60,10 @@ def ui_run(frame, people_dict, update_callback):
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
         ("ID", IntVar(frame)),
-        ("Interest 1", StringVar(frame)),
-        ("Interest 2", StringVar(frame)),
-        ("Interest 3", StringVar(frame))
+        ("Year level", StringVar(frame)),
+        ("Major", StringVar(frame)),
+        ("Library in campus", StringVar(frame)),
+        ("Coffee in campus", StringVar(frame)),
         ])
 
     def ui_callback():
@@ -61,6 +73,7 @@ def ui_run(frame, people_dict, update_callback):
         person.add_interest(field_dict["Interest 1"].get())
         person.add_interest(field_dict["Interest 2"].get())
         person.add_interest(field_dict["Interest 3"].get())
+        person.add_interest(field_dict["Interest 4"].get())
         update_callback()
     
     # draw UI
@@ -68,9 +81,9 @@ def ui_run(frame, people_dict, update_callback):
 
 
 if __name__ == "__main__":
-    window = Tk()
+    window = tk.Tk()
     window.title("Hermes")
-    window.geometry('435x500')
+    window.geometry('300x450')
     def callback_print():
         print("Button pressed")
     people = OrderedDict()

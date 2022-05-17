@@ -41,13 +41,13 @@ def draw_ui(frame, field_dict, callback):
         if labelText == "ID":
             OptionMenu(frame, content, *list_id).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=2)
         
-        if labelText == "1":
+        if labelText == "Year level":
             OptionMenu(frame, content, *list_category_1).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
-        if labelText == "2":
+        if labelText == "Major":
             OptionMenu(frame, content, *list_category_2).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
-        if labelText == "3":
+        if labelText == "Library in campus":
             OptionMenu(frame, content, *list_category_3).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
-        elif labelText == "4":
+        elif labelText == "Coffee in campus":
             OptionMenu(frame, content, *list_category_4).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
         field_row += 1
     
@@ -70,10 +70,10 @@ def ui_run(frame, people_dict, update_callback):
 
         person = Person(field_dict["ID"].get())
         people_dict[person.get_id()] = person
-        person.add_interest(field_dict["Interest 1"].get())
-        person.add_interest(field_dict["Interest 2"].get())
-        person.add_interest(field_dict["Interest 3"].get())
-        person.add_interest(field_dict["Interest 4"].get())
+        person.add_interest(field_dict["Year level"].get())
+        person.add_interest(field_dict["Major"].get())
+        person.add_interest(field_dict["Library in campus"].get())
+        person.add_interest(field_dict["Coffee in campus"].get())
         update_callback()
     
     # draw UI

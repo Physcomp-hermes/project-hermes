@@ -33,26 +33,36 @@ def draw_ui(frame, field_dict, callback):
     frame.grid_rowconfigure(0, weight=1)
 
     # title
-    Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2,pady=10)
+    Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2,pady=(30,20))
 
     field_row = 1
     for labelText, content in field_dict.items():
-        Label(frame,text = labelText, font=f2).grid(row = field_row, column = 0,sticky=W, padx=(55,0),pady=10)
+        Label(frame,text = labelText, font=f2).grid(sticky=W, padx=(55,0),pady=(5,0))
         if labelText == "ID":
-            OptionMenu(frame, content, *list_id).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=2)
+            optionMenu = OptionMenu(frame, content, *list_id)
+            optionMenu.config(width=120)
+            optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         
         if labelText == "Year level":
-            OptionMenu(frame, content, *list_category_1).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
+            optionMenu = OptionMenu(frame, content, *list_category_1)
+            optionMenu.config(width=120)
+            optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         if labelText == "Major":
-            OptionMenu(frame, content, *list_category_2).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
+            optionMenu = OptionMenu(frame, content, *list_category_2)
+            optionMenu.config(width=120)
+            optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         if labelText == "Library in campus":
-            OptionMenu(frame, content, *list_category_3).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
+            optionMenu = OptionMenu(frame, content, *list_category_3)
+            optionMenu.config(width=120)
+            optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         elif labelText == "Coffee in campus":
-            OptionMenu(frame, content, *list_category_4).grid(row = field_row, column= 1,sticky=E,padx=(0,55),pady=10,ipadx=5)
+            optionMenu = OptionMenu(frame, content, *list_category_4)
+            optionMenu.config(width=120)
+            optionMenu.grid(sticky=W,padx=55,pady=(0,10))
         field_row += 1
-    
+
     # create a Submit Button and place into the window
-    Button(frame, text='Submit',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 6, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
+    Button(frame, text='Submit',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, columnspan=2,pady=30,ipadx=20,ipady=5)
 
 
 def ui_run(frame, people_dict, update_callback):
@@ -83,7 +93,7 @@ def ui_run(frame, people_dict, update_callback):
 if __name__ == "__main__":
     window = Tk()
     window.title("Hermes")
-    window.geometry('300x450')
+    window.geometry("300x600")
     def callback_print():
         print("Button pressed")
     people = OrderedDict()

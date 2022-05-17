@@ -52,7 +52,7 @@ def draw_ui(frame, field_dict, callback):
         field_row += 1
     
     # create a Submit Button and place into the window
-    Button(frame, text='Submit',font=f3, command=callback).grid(row = 6, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
+    Button(frame, text='Submit',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 6, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
 
 
 def ui_run(frame, people_dict, update_callback):
@@ -81,7 +81,7 @@ def ui_run(frame, people_dict, update_callback):
 
 
 if __name__ == "__main__":
-    window = tk.Tk()
+    window = Tk()
     window.title("Hermes")
     window.geometry('300x450')
     def callback_print():

@@ -14,7 +14,7 @@ def draw_ui(frame, field_dict, callback):
     field_dict: ordered dictionary containing field label and content
     callback: callback function to be executed when button is clicked
     """
-    
+    # just to make some difference
 
     # set font design
     f1 = tkFont.Font(family="URW Gothic L", size=20)
@@ -27,7 +27,7 @@ def draw_ui(frame, field_dict, callback):
     list_category_2=("Computer science", "Electrical engineering", "Information technology", "Mechatronics engineering", "Software engineering", "Other")
     list_category_3=("Architecture library", "BSL library", "Central library", "Dorothy hill", "Law library")
     list_category_4=("Bagel boys", "Beans engineered", "Darwins", "Lakeside cafe", "Merlos in great court", "Nano cafe", "Phiyzz cafe", "Red bull", "The one in mains")
-
+    
     # frame.pack(expand=True)
     frame.grid_columnconfigure(0, weight=1)
     frame.grid_rowconfigure(0, weight=1)

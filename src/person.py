@@ -1,3 +1,4 @@
+from turtle import color
 from .marker import Marker
 # This is the class for each person during the event
 # This class is used to store the information of people in the event.
@@ -91,9 +92,11 @@ class Person:
         
         return strength
 
-    def get_colour():
+    def get_colour(self):
         '''
         Returns the colour in a form of string
         '''
-        
-        pass
+        colour_string = ""
+        for interest in self._interests:
+            colour_string += str(interest)
+        return colour_string

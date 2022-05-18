@@ -48,7 +48,7 @@ def handle_client(conn, addr, people_dict):
             print("[Sent] ", color)
         
         elif msg[0] == "V":
-            #
+            # Send vibtation signal
             strength = str(people_dict[msg].get_strength())
             conn.send(strength.encode(FORMAT))
             print("[Sent] ", strength)

@@ -64,7 +64,7 @@ def ui_run(frame, people_dict):
                 continue
             field_value = field_dict[key].get()
             person.add_interest(category_dict[key].index(field_value))
-        # print(person.get_interests())
+        
     # draw UI
     draw_ui(frame, field_dict, ui_callback)
 

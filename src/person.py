@@ -91,4 +91,9 @@ class Person:
         
         return strength
 
-
+    def get_colour():
+        '''
+        Returns the colour in a form of string
+        '''
+        
+        pass

@@ -11,8 +11,8 @@ HEADER = 64
 PORT = 5050
 HOSTNAME = socket.gethostname()
 print("Hostname: ", HOSTNAME)
-SERVER = socket.gethostbyname(socket.getfqdn())
-# SERVER = '192.168.142.53'
+# SERVER = socket.gethostbyname(socket.getfqdn())
+SERVER = '192.168.142.53'
 ADDR = (SERVER, PORT)
 # TADDR = (TSERVER, PORT)
 FORMAT = 'utf-8'
@@ -43,16 +43,24 @@ def handle_client(conn, addr, people_dict):
         if msg[0] == "C":
             # Send colour to the device
             # Colour is sent as a string.. for now
-            color = str(people_dict[msg].get_color())
-            conn.send(color.encode(FORMAT))
-            print("[Sent] ", color)
+            if device_id in people_dict:
+                color = str(people_dict[device_id].get_colour())
+                conn.send(color.encode(FORMAT))
+                print("[Sent] ", color)
+            else:
+                conn.send("0000".encode(FORMAT))
+                print("Colour request for unregistered person")
+                
         
         elif msg[0] == "V":
-            # Send vibtation signal
-            strength = str(people_dict[msg].get_strength())
-            conn.send(strength.encode(FORMAT))
-            print("[Sent] ", strength)
-        
+
+            if device_id in people_dict:
+                strength = str(people_dict[device_id].get_strength())
+                conn.send(strength.encode(FORMAT))
+                print("[Sent] ", strength)
+            else:
+                conn.send("0".encode(FORMAT))
+                print("colour request for unregistered person")
         else:
             print("Wrong communication")
         connected = False
@@ -71,7 +79,6 @@ def server_start(participants):
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr, participants))
         thread.start()
-        # print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 2}")
 
 
 def assert_msg():

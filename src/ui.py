@@ -15,7 +15,7 @@ category_dict["Library in campus"] = ["Architecture library", "BSL library", "Ce
 category_dict["Coffee in campus"] = ["Bagel boys", "Beans engineered", "Darwins", "Lakeside cafe", "Merlos in great court", "Nano cafe", "Phiyzz cafe", "Red bull", "The one in mains"]
 
 # form ui
-def draw_ui(frame, field_dict, callback):
+def draw_ui(frame, field_dict, register_callback, calib_callback):
     """
     field_dict: ordered dictionary containing field label and content
     callback: callback function to be executed when button is clicked
@@ -41,10 +41,11 @@ def draw_ui(frame, field_dict, callback):
         field_row += 1
     
     # create a Submit Button and place into the window
-    Button(frame, text='Submit',font=f3, command=callback).grid(row = 6, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
+    Button(frame, text='Submit',font=f3, command=register_callback).grid(row = 6, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
+    Button(frame, text='Calibrate',font=f3, command=calib_callback).grid(row = 7, columnspan=2,pady=(40,60),ipadx=20,ipady=5)
 
 
-def ui_run(frame, people_dict):
+def ui_run(frame, people_dict, calib_callback):
     
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
@@ -66,7 +67,7 @@ def ui_run(frame, people_dict):
             person.add_interest(category_dict[key].index(field_value))
         
     # draw UI
-    draw_ui(frame, field_dict, ui_callback)
+    draw_ui(frame, field_dict, ui_callback, calib_callback)
 
 
 if __name__ == "__main__":

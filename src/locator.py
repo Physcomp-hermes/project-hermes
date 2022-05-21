@@ -18,12 +18,15 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(1)
+        self.cam = cv2.VideoCapture(2)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
 
         self.ui_frame = ui_frame
+        # ID of reference marker
+        self.ref_id = 1
+        self.has_ref = False
         # cam_width = self.cam.get(cv2.CAP_PROP_FRAME_WIDTH)
         # cam_height = self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
         # print("camera w: ", cam_width, "h: ", cam_height)
@@ -63,8 +66,13 @@ class Locator:
                 if id_subject == id_target or not target.present:
                     continue
                 # print(f"Checking {id_subject} and {id_target}")
-                if subject.is_facing(target):
-                    facing_dict[id_subject] = id_target
+                if self.has_ref:
+                    print("Has reference")
+                    if subject.is_facing_2D(target, self.ref_extrinsic_inv):
+                        facing_dict[id_subject] = id_target
+                else:
+                    if subject.is_facing(target):
+                        facing_dict[id_subject] = id_target
                     # print(id_subject, " Facing ", id_target)
                     # subject.set_facing(target)
         return facing_dict
@@ -90,7 +98,10 @@ class Locator:
                     id = self.ids[j][0]
                     if id in self.people_dict:
                         person = self.people_dict[id]
-                        person.marker.update_location(rvecs[j], tvecs[j])
+                        if self.has_ref:
+                            person.marker.update_location_2D(rvecs[j], tvecs[j], self.ref_extrinsic_inv)
+                        else:
+                            person.marker.update_location(rvecs[j], tvecs[j])
                         person.set_presence(True)
             
             frame_facing = self.__get_facing()
@@ -127,7 +138,7 @@ class Locator:
         Run locator. This function calls itself over the main ui window.
         """
         self.__process_next_interval()
-        self.print_strengths()
+        # self.print_strengths()
         self.ui_frame.after(100, self.run_locator)
     
     def show_markers(self):
@@ -150,6 +161,35 @@ class Locator:
         # print(strengths)
         print(facing)
 
+    def calibrate_extrinsics(self):
+        """
+        Calculate extrinsic matrix given rvec and tvec
+        id: ID of the marker that will be used as reference frame
+        """
+        rvecs, tvecs, obj = cv2.aruco.estimatePoseSingleMarkers(
+                self.corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
+        ref_present = False
+        if np.any(self.ids):
+                for j in range(len(self.ids)):
+                    id = self.ids[j][0]
+                    if id == self.ref_id:
+                        rvec = rvecs[j]
+                        tvec = tvecs[j]
+                        ref_present = True
+        if not ref_present:
+            print("Calibration marker absent")
+            return
+        rod, jac = cv2.Rodrigues(rvec)
+        tmp_matrix = np.c_[rod, np.matrix.transpose(tvec)]
+        # Get the extrinsics from given rvec and tvec, then save it in the locator object
+        ref_extrinsic = np.r_[tmp_matrix, [[0, 0, 0, 1]]]
+        # ref_extrinsic = np.r_[tmp_matrix, np.zeros((1,4))]
+        print(ref_extrinsic)
+        self.ref_extrinsic_inv = self.ref_matrix = np.linalg.inv(ref_extrinsic)
+        self.has_ref = True
+
+        print("Extrinsics reference updated")
+        
             
 
 

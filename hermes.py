@@ -28,7 +28,7 @@ def main():
     locator = Locator(participants, window)
     server_thread = Thread(target=server_start, args=(participants, ))
     locator.run_locator()
-    ui_run(window, participants)
+    ui_run(window, participants, locator.calibrate_extrinsics)
     # start the server
     server_thread.start()
     

@@ -100,3 +100,7 @@ class Person:
         for interest in self._interests:
             colour_string += str(interest)
         return colour_string
+
+    def is_facing_2D(self, target, extrinsic_inv):
+        return self.marker.is_facing_2D(target.marker.get_location_2D(), extrinsic_inv)
+    

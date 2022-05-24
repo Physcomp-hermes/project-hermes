@@ -21,7 +21,7 @@ def main():
     # UI initialisation
     window = Tk()
     window.title("Hermes")
-    window.geometry('435x500')
+    window.geometry('425x550')
     # locator = Locator(participants, window)
     # server_thread = Thread(target=server_start, args=(vib_strengths, ))
     # people locator

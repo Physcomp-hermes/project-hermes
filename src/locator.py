@@ -67,8 +67,8 @@ class Locator:
                     continue
                 # print(f"Checking {id_subject} and {id_target}")
                 if self.has_ref:
-                    print("Has reference")
-                    if subject.is_facing_2D(target, self.ref_extrinsic_inv):
+                    # print("Has reference")
+                    if subject.is_facing_2D(target):
                         facing_dict[id_subject] = id_target
                 else:
                     if subject.is_facing(target):

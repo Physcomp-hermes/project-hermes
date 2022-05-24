@@ -22,20 +22,6 @@ class Marker:
         # frontal vector
         self.vec_front = np.zeros(3)
 
-    def __calculate_angle(self, target_coord):
-        """
-        Calculate the angle between the front of the marke and given target coordinate.
-        The target coordinate is also in camera coordinate system
-        """
-
-        front_norm = np.linalg.norm(self.vec_front)
-        target_vec = np.subtract(target_coord, self.centre_coord)
-        target_norm = np.linalg.norm(target_vec)
-        
-        angle_rad = np.arccos(np.dot(self.vec_front, target_vec) / (front_norm * target_norm))
-        angle_deg = angle_rad * 180 / math.pi
-        # print(angle_deg)
-        return angle_deg
     
     def __calculate_angle_2D(self, target_coord, extrinsics):
         '''
@@ -60,6 +46,23 @@ class Marker:
         '''
         return self.centre_coord_2D
     
+    def __calculate_angle(self, coord_target):
+        """
+        Calculate the angle between the front of the marke and given target coordinate.
+        The target coordinate is also in camera coordinate system
+        """
+        vec_front = np.subtract(self.frontal_coord, self.centre_coord)
+        vec_target = np.subtract(coord_target, self.centre_coord)        
+        # vec_target = np.transpose(vec_target)
+        vec_front = np.transpose(vec_front)
+        front_norm = np.linalg.norm(vec_front)
+        target_norm = np.linalg.norm(vec_target)
+        
+        angle_rad = np.arccos(np.dot(vec_front, vec_target) / (front_norm * target_norm))
+        angle_deg = angle_rad * 180 / math.pi
+        print("angle")
+        print(angle_deg)
+        return angle_deg
     
     def update_location(self, rvec, tvec):
         '''
@@ -92,19 +95,14 @@ class Marker:
         front = [[0], [0.05], [0], [1]]
         # convert centre coordinate and frontal coordinate
         combined_extrinsic = np.matmul(ref_extrinsic_inv, marker_to_camera)
-        ccord = np.matmul(combined_extrinsic, origin)
-        # print(combined_extrinsic)
-        # print(marker_to_camera)
-        # print(ref_extrinsic_inv)
-        centre_coord = np.matmul(marker_to_camera, origin)
-        # print(centre_coord)
-        centre_coord = np.matmul(ref_extrinsic_inv, centre_coord)
-        print(centre_coord)
-        frontal_coord = np.matmul(marker_to_camera, front)
-        frontal_coord = np.matmul(ref_extrinsic_inv, frontal_coord)
-        # print(frontal_coord)
+        centre_coord = np.matmul(combined_extrinsic, origin)
+        frontal_coord = np.matmul(combined_extrinsic, front)
+
         # remove the z coordinate and only save x,y cooridnate
-        
+        self.frontal_coord_2D = np.delete(frontal_coord, [2,3], 0)
+        self.centre_coord_2D = np.delete(centre_coord, [2,3], 0)
+        # print(centre_coord)
+        # print(self.frontal_coord_2D)
         
     
     def is_facing(self, coordinate):
@@ -114,5 +112,28 @@ class Marker:
         '''
         return self.__calculate_angle(coordinate) < self.face_threshold
 
-    def is_facing_2D(self, coordinate, extrinsics_inv):
-        pass
+    def is_facing_2D(self, coordinate):
+        
+        return calculate_angle(self.centre_coord_2D, self.frontal_coord_2D, coordinate) < self.face_threshold
+
+def calculate_angle(coord_centre, coord_front, coord_target):
+        """
+        Calculate the angle between the front of the marke and given target coordinate.
+        The target coordinate is also in camera coordinate system
+        """
+        vec_front = np.subtract(coord_front, coord_centre)
+        vec_target = np.subtract(coord_target, coord_centre)        
+        vec_front = np.transpose(vec_front)
+        # print("Vec")
+        # print(vec_front)
+        # print(vec_target)
+        front_norm = np.linalg.norm(vec_front)
+        target_norm = np.linalg.norm(vec_target)
+        # print("Norms")
+        # print(front_norm)
+        # print(target_norm)
+        angle_rad = np.arccos(np.dot(vec_front, vec_target) / (front_norm * target_norm))
+        angle_deg = angle_rad * 180 / math.pi
+        # print("Angle")
+        print(angle_deg)
+        return angle_deg

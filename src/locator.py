@@ -185,7 +185,7 @@ class Locator:
         ref_extrinsic = np.r_[tmp_matrix, [[0, 0, 0, 1]]]
         # ref_extrinsic = np.r_[tmp_matrix, np.zeros((1,4))]
         print(ref_extrinsic)
-        self.ref_extrinsic_inv = self.ref_matrix = np.linalg.inv(ref_extrinsic)
+        self.ref_extrinsic_inv = np.linalg.inv(ref_extrinsic)
         self.has_ref = True
 
         print("Extrinsics reference updated")

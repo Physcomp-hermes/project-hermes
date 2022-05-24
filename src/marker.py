@@ -71,7 +71,7 @@ class Marker:
         # Calculate projection matrix
         rod, jac = cv2.Rodrigues(rvec)
         tmp_matrix = np.c_[rod, np.matrix.transpose(tvec)]
-        extrinsic_matrix = np.r_[tmp_matrix, np.zeros((1,4))]
+        extrinsic_matrix = np.r_[tmp_matrix, [[0,0,0,1]]]
         origin = [[0], [0], [0], [1]]
         front = [[0], [0.05], [0], [1]]
         # Update centre coordinate and frontal vector
@@ -87,19 +87,19 @@ class Marker:
         # Calculate projection matrix
         rod, jac = cv2.Rodrigues(rvec)
         tmp_matrix = np.c_[rod, np.matrix.transpose(tvec)]
-        marker_to_camera = np.r_[tmp_matrix, np.zeros((1,4))]
+        marker_to_camera = np.r_[tmp_matrix, [[0,0,0,1]]]
         origin = [[0], [0], [0], [1]]
         front = [[0], [0.05], [0], [1]]
         # convert centre coordinate and frontal coordinate
         combined_extrinsic = np.matmul(ref_extrinsic_inv, marker_to_camera)
         ccord = np.matmul(combined_extrinsic, origin)
-        print(combined_extrinsic)
-        print(marker_to_camera)
-        print(ref_extrinsic_inv)
+        # print(combined_extrinsic)
+        # print(marker_to_camera)
+        # print(ref_extrinsic_inv)
         centre_coord = np.matmul(marker_to_camera, origin)
         # print(centre_coord)
         centre_coord = np.matmul(ref_extrinsic_inv, centre_coord)
-        # print(centre_coord)
+        print(centre_coord)
         frontal_coord = np.matmul(marker_to_camera, front)
         frontal_coord = np.matmul(ref_extrinsic_inv, frontal_coord)
         # print(frontal_coord)

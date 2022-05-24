@@ -101,8 +101,7 @@ class Marker:
         # remove the z coordinate and only save x,y cooridnate
         self.frontal_coord_2D = np.delete(frontal_coord, [2,3], 0)
         self.centre_coord_2D = np.delete(centre_coord, [2,3], 0)
-        # print(centre_coord)
-        # print(self.frontal_coord_2D)
+        
         
     
     def is_facing(self, coordinate):
@@ -124,14 +123,8 @@ def calculate_angle(coord_centre, coord_front, coord_target):
         vec_front = np.subtract(coord_front, coord_centre)
         vec_target = np.subtract(coord_target, coord_centre)        
         vec_front = np.transpose(vec_front)
-        # print("Vec")
-        # print(vec_front)
-        # print(vec_target)
         front_norm = np.linalg.norm(vec_front)
         target_norm = np.linalg.norm(vec_target)
-        # print("Norms")
-        # print(front_norm)
-        # print(target_norm)
         angle_rad = np.arccos(np.dot(vec_front, vec_target) / (front_norm * target_norm))
         angle_deg = angle_rad * 180 / math.pi
         # print("Angle")

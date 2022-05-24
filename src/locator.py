@@ -18,7 +18,7 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(2)
+        self.cam = cv2.VideoCapture(1)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
@@ -27,10 +27,6 @@ class Locator:
         # ID of reference marker
         self.ref_id = 1
         self.has_ref = False
-        # cam_width = self.cam.get(cv2.CAP_PROP_FRAME_WIDTH)
-        # cam_height = self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        # print("camera w: ", cam_width, "h: ", cam_height)
-        # self.ui_frame.config(width=cam_width, height=cam_height)
 
     
     def __del__(self):
@@ -73,8 +69,6 @@ class Locator:
                 else:
                     if subject.is_facing(target):
                         facing_dict[id_subject] = id_target
-                    # print(id_subject, " Facing ", id_target)
-                    # subject.set_facing(target)
         return facing_dict
 
     def __sample_frames(self, frames):
@@ -108,11 +102,10 @@ class Locator:
             for key, value in frame_facing.items():
                 facing_buffer[key][i] = value
                 
-        # print(facing_buffer)
         for key in self.people_dict:
             mode = stats.mode(facing_buffer[key])
             facing_dict[key] = int(mode[0][0])
-        # print(facing_dict)
+        
         return facing_dict
 
     def __process_next_interval(self):

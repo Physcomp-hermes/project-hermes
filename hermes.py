@@ -13,6 +13,7 @@ participants = OrderedDict()
 window = Tk()
 window.title("Hermes")
 window.geometry('425x550')
+window.configure(bg='white')
 def main():
     """
     This is the main function for hermes application. 

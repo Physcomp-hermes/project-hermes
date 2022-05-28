@@ -20,6 +20,7 @@ def draw_ui(frame, field_dict, callback):
     f1 = tkFont.Font(family="URW Gothic L", size=20)
     f2 = tkFont.Font(family="Ubuntu Mono", size=12)
     f3 = tkFont.Font(family="Sawasdee", size=11)
+    main_font = tkFont.Font(family="Roboto", size=20)
 
     # list of interest category
     list_id=("1", "2", "3", "4","5")
@@ -35,7 +36,7 @@ def draw_ui(frame, field_dict, callback):
 
     # title
     # Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2,pady=(30,20))
-    Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2,pady=(30,20))
+    Label(frame, text="Registration Form",font=main_font).grid(row = 0, columnspan=2,pady=(30,20))
     
     field_row = 1
     for labelText, content in field_dict.items():
@@ -45,7 +46,7 @@ def draw_ui(frame, field_dict, callback):
         #     optionMenu.config(width=50)
         #     optionMenu.grid(sticky=W,padx=55,pady=(0,10))
 
-        Label(frame,text = labelText, font=f2).grid(sticky=W, padx=(55,0),pady=(5,0))
+        Label(frame,text = labelText, font=f2, bg='white').grid(sticky=W, padx=(55,0),pady=(5,0))
         if labelText == "ID":
             optionMenu = OptionMenu(frame, content, *list_id)
             optionMenu.config(width=150)
@@ -58,8 +59,8 @@ def draw_ui(frame, field_dict, callback):
 
     # create a Submit Button and place into the window
     # Button(frame, text='Submit',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, columnspan=2,pady=30,ipadx=20,ipady=5)
-    Button(frame, text='Submit',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50),ipadx=25,ipady=3)
-    Button(frame, text='Calibrate',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, column=1,sticky=E,padx=(0,80),pady=(30,50),ipadx=20,ipady=3)
+    Button(frame, text='Submit',font=main_font, command=callback,  highlightbackground='#3E4149', fg = "white").grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50),ipadx=25,ipady=3)
+    Button(frame, text='Calibrate',font=main_font, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, column=1,sticky=E,padx=(0,80),pady=(30,50),ipadx=20,ipady=3)
 
 
 def ui_run(frame, people_dict, update_callback):
@@ -67,10 +68,10 @@ def ui_run(frame, people_dict, update_callback):
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
         ("ID", IntVar(frame)),
-        ("Year level", StringVar(frame)),
-        ("Major", StringVar(frame)),
-        ("Library in campus", StringVar(frame)),
-        ("Coffee in campus", StringVar(frame)),
+        ("Year level", StringVar(frame, value="First")),
+        ("Major", StringVar(frame, value="Computer science")),
+        ("Library in campus", StringVar(frame, value="Architecture library")),
+        ("Coffee in campus", StringVar(frame, value="Bagel boys")),
         ])
 
     def ui_callback():

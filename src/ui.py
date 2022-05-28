@@ -21,33 +21,35 @@ def draw_ui(frame, field_dict, register_callback, calib_callback):
     callback: callback function to be executed when button is clicked
     """
     # set font design
-    f1 = tkFont.Font(family="URW Gothic L", size=20)
-    f2 = tkFont.Font(family="Ubuntu Mono", size=12)
-    f3 = tkFont.Font(family="Sawasdee", size=11)
     main_font = tkFont.Font(family="Roboto", size=20)
-    
+    content_font = tkFont.Font(family="Ubuntu Mono", size=12)
+
+    # set the image 
+    btn1= tk.PhotoImage(file='./img/button1.png')
+    btn2= tk.PhotoImage(file='./img/button2.png')
+
     frame.grid_columnconfigure(0, weight=1)
     frame.grid_rowconfigure(0, weight=1)
 
     # title
-    Label(frame, text="Registration Form",font=main_font).grid(row = 0, columnspan=2,pady=(30,20))
+    Label(frame, text="Registration Form",font=main_font,bg='white').grid(row = 0, columnspan=2,pady=(30,15))
 
     field_row = 1
     for labelText, content in field_dict.items():
-        Label(frame,text = labelText, font=f2, bg='white').grid(sticky=W, padx=(55,0),pady=(5,0))
+        Label(frame,text = labelText, font=content_font, bg='white').grid(sticky=W, padx=(55,0),pady=(5,0))
         if labelText == "ID":
             optionMenu = OptionMenu(frame, content, *list_id)
-            optionMenu.config(width=150)
-            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10))
+            optionMenu.config(width=150,highlightthickness=1,highlightbackground="#3684c6")
+            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10),ipady=5)
         else:
             optionMenu = OptionMenu(frame, content, *category_dict[labelText])
-            optionMenu.config(width=150)
-            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10))
+            optionMenu.config(width=150,highlightthickness=1,highlightbackground="#3684c6")
+            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10),ipady=5)
         field_row += 1
     
     # create a Submit Button and place into the window
-    Button(frame, text='Submit',font=main_font, command=register_callback, highlightbackground='#3E4149', fg = "white").grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50),ipadx=25,ipady=3)
-    Button(frame, text='Calibrate',font=main_font, command=calib_callback, bg = "deepskyblue", fg = "white").grid(row = 12, column=1,sticky=E,padx=(0,80),pady=(30,50),ipadx=20,ipady=3)
+    Button(frame,image=btn1,command=register_callback,width="90",height="35",borderwidth=0).grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50))
+    Button(frame,image=btn1,command=calib_callback,width="90",height="35",borderwidth=0).grid(row = 12, column=1,sticky=E,padx=(0,80),pady=(30,50))
 
 
 def ui_run(frame, people_dict, calib_callback):
@@ -78,7 +80,7 @@ def ui_run(frame, people_dict, calib_callback):
 if __name__ == "__main__":
     window = tk.Tk()
     window.title("Hermes")
-    window.geometry('425x550')
+    window.geometry('425x600')
     def callback_print():
         print("Button pressed")
     people = OrderedDict()

@@ -12,7 +12,7 @@ participants = OrderedDict()
 
 window = Tk()
 window.title("Hermes")
-window.geometry('425x550')
+window.geometry('425x600')
 window.configure(bg='white')
 def main():
     """

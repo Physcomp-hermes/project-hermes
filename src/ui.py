@@ -6,8 +6,6 @@ from collections import OrderedDict
 from .person import Person
 
 
-
-
 # form ui
 def draw_ui(frame, field_dict, callback):
     """
@@ -17,10 +15,11 @@ def draw_ui(frame, field_dict, callback):
     # just to make some difference
 
     # set font design
-    f1 = tkFont.Font(family="URW Gothic L", size=20)
-    f2 = tkFont.Font(family="Ubuntu Mono", size=12)
-    f3 = tkFont.Font(family="Sawasdee", size=11)
+    content_font = tkFont.Font(family="Ubuntu Mono", size=12)
     main_font = tkFont.Font(family="Roboto", size=20)
+
+    btn1= tk.PhotoImage(file='./img/button1.png')
+    btn2= tk.PhotoImage(file='./img/button2.png')
 
     # list of interest category
     list_id=("1", "2", "3", "4","5")
@@ -36,7 +35,7 @@ def draw_ui(frame, field_dict, callback):
 
     # title
     # Label(frame, text="Registration Form",font=f1).grid(row = 0, columnspan=2,pady=(30,20))
-    Label(frame, text="Registration Form",font=main_font).grid(row = 0, columnspan=2,pady=(30,20))
+    Label(frame, text="Registration Form",font=main_font,bg='white').grid(row = 0, columnspan=2,pady=(30,15))
     
     field_row = 1
     for labelText, content in field_dict.items():
@@ -46,21 +45,22 @@ def draw_ui(frame, field_dict, callback):
         #     optionMenu.config(width=50)
         #     optionMenu.grid(sticky=W,padx=55,pady=(0,10))
 
-        Label(frame,text = labelText, font=f2, bg='white').grid(sticky=W, padx=(55,0),pady=(5,0))
+        Label(frame,text = labelText, font=content_font, bg='white').grid(sticky=W, padx=(55,0),pady=(5,0))
         if labelText == "ID":
             optionMenu = OptionMenu(frame, content, *list_id)
-            optionMenu.config(width=150)
-            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10))
+            optionMenu.config(width=150,highlightthickness=1,highlightbackground="#3684c6")
+            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10),ipady=5)
+
         else:
             optionMenu = OptionMenu(frame, content, *category_dict[labelText])
-            optionMenu.config(width=150)
-            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10))
+            optionMenu.config(width=150,highlightthickness=1,highlightbackground="#3684c6")
+            optionMenu.grid(columnspan=2,sticky=W,padx=55,pady=(0,10),ipady=5)
         field_row += 1
 
     # create a Submit Button and place into the window
     # Button(frame, text='Submit',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, columnspan=2,pady=30,ipadx=20,ipady=5)
-    Button(frame,text='Submit',font=main_font, command=callback, highlightbackground='#3E4149', fg = "white").grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50),ipadx=25,ipady=3)
-    Button(frame, text='Calibrate',font=main_font, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, column=1,sticky=E,padx=(0,80),pady=(30,50),ipadx=20,ipady=3)
+    Button(frame,text='Submit',image=btn1, command=callback,width="90", height="35",borderwidth=0).grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50))
+    Button(frame, text='Calibrate',image=btn2, command=callback,width="90", height="35",borderwidth=0).grid(row = 12, column=1,sticky=E,padx=(0,80),pady=(30,50))
 
 
 def ui_run(frame, people_dict, update_callback):
@@ -91,7 +91,7 @@ def ui_run(frame, people_dict, update_callback):
 if __name__ == "__main__":
     window = Tk()
     window.title("Hermes")
-    window.geometry('425x550')
+    window.geometry('425x600')
     def callback_print():
         print("Button pressed")
     people = OrderedDict()

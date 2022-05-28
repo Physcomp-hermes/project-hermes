@@ -59,7 +59,7 @@ def draw_ui(frame, field_dict, callback):
 
     # create a Submit Button and place into the window
     # Button(frame, text='Submit',font=f3, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, columnspan=2,pady=30,ipadx=20,ipady=5)
-    Button(frame, text='Submit',font=main_font, command=callback,  highlightbackground='#3E4149', fg = "white").grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50),ipadx=25,ipady=3)
+    Button(frame,text='Submit',font=main_font, command=callback, highlightbackground='#3E4149', fg = "white").grid(row = 12, column=0,sticky=W,padx=(80,0),pady=(30,50),ipadx=25,ipady=3)
     Button(frame, text='Calibrate',font=main_font, command=callback, bg = "deepskyblue", fg = "white").grid(row = 12, column=1,sticky=E,padx=(0,80),pady=(30,50),ipadx=20,ipady=3)
 
 

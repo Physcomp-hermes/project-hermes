@@ -10,10 +10,10 @@ from .person import Person
 # list of interest category
 list_id=["1", "2", "3", "4","5"]
 category_dict = OrderedDict()
-category_dict["Year level"] = ["First", "Second", "Third & after", "Postgrad"]
-category_dict["Major"] = ["Computer science", "Electrical engineering", "Information technology", "Mechatronics engineering", "Software engineering", "Other"]
-category_dict["Library in campus"] = ["Architecture library", "BSL library", "Central library", "Dorothy hill", "Law library"]
-category_dict["Coffee in campus"] = ["Bagel boys", "Beans engineered", "Darwins", "Lakeside cafe", "Merlos in great court", "Nano cafe", "Phiyzz cafe", "Red bull", "The one in mains"]
+category_dict["Cat or dog?"] = ["Cat", "Dog", "None"]
+category_dict["Favourite time of the day"] = ["Morning", "Afternoon", "Night"]
+category_dict["If you were to watch a movie"] = ["Action", "Romance", "Comedy", "Horror"]
+category_dict["Pineapple on Pizza?"] = ["Yes", "No"]
 
 # form ui
 def draw_ui(frame, field_dict, register_callback, calib_callback):
@@ -24,7 +24,6 @@ def draw_ui(frame, field_dict, register_callback, calib_callback):
     # set font design
     main_font = tkFont.Font(family="Roboto", size=20)
     content_font = tkFont.Font(family="Ubuntu Mono", size=12)
-    print(getcwd())
     # set the image 
     global btn1, btn2
     btn1= tk.PhotoImage(file='./img/button3.png')
@@ -58,11 +57,11 @@ def ui_run(frame, people_dict, calib_callback):
     
     #initialise dictionary used to save variable
     field_dict = OrderedDict([
-        ("ID", IntVar(frame)),
-        ("Year level", StringVar(frame, value="First")),
-        ("Major", StringVar(frame, value="Computer science")),
-        ("Library in campus", StringVar(frame, value="Architecture library")),
-        ("Coffee in campus", StringVar(frame, value="Bagel boys")),
+        ("ID", IntVar(frame, value="1")),
+        ("Cat or dog?", StringVar(frame, value="None")),
+        ("Favourite time of the day", StringVar(frame, value="Morning")),
+        ("If you were to watch a movie", StringVar(frame, value="Action")),
+        ("Pineapple on Pizza?", StringVar(frame, value="Yes")),
         ])
 
     def ui_callback():
@@ -73,8 +72,10 @@ def ui_run(frame, people_dict, calib_callback):
             if key == "ID":
                 continue
             field_value = field_dict[key].get()
-            person.add_interest(category_dict[key].index(field_value))
-        
+            # print(field_value)
+            # person.add_interest(category_dict[key].index(field_value))
+            person.add_interest(field_value)
+        print(person.get_interests)
     # draw UI
     draw_ui(frame, field_dict, ui_callback, calib_callback)
 

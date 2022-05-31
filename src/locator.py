@@ -18,7 +18,7 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(1)
+        self.cam = cv2.VideoCapture(2)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
@@ -131,7 +131,7 @@ class Locator:
         Run locator. This function calls itself over the main ui window.
         """
         self.__process_next_interval()
-        # self.print_strengths()
+        self.print_info()
         self.ui_frame.after(100, self.run_locator)
     
     def show_markers(self):
@@ -139,7 +139,7 @@ class Locator:
         cv2.aruco.drawDetectedMarkers(frame, self.corners, self.ids)
         cv2.imshow("Frame", frame)
     
-    def print_strengths(self):
+    def print_info(self):
         strengths = "[Strengths: "
         facing = "[Facing: "
         for id, person in self.people_dict.items():

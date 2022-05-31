@@ -68,6 +68,7 @@ class Person:
         return self._id
     
     def add_interest(self, interest):
+        # print(self._interests)
         self._interests.append(interest)
     
     def get_interests(self):
@@ -88,6 +89,7 @@ class Person:
         for my_interest in self._interests:
             for target_interest in target.get_interests():
                 if my_interest == target_interest:
+                    # print(f"Interests {my_interest} {target_interest}")
                     strength += 1
         
         return strength

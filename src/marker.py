@@ -12,7 +12,7 @@ class Marker:
         # width of the marker in metres
         self.width = 0.1
         # angle threshold to determine whether it's facing something or not
-        self.face_threshold = 30
+        self.face_threshold = 10
         # 3D coordinates
         self.centre_coord = np.zeros(3)
         self.frontal_coord = np.zeros(3)
@@ -60,8 +60,8 @@ class Marker:
         
         angle_rad = np.arccos(np.dot(vec_front, vec_target) / (front_norm * target_norm))
         angle_deg = angle_rad * 180 / math.pi
-        print("angle")
-        print(angle_deg)
+        # print("angle")
+        # print(angle_deg)
         return angle_deg
     
     def update_location(self, rvec, tvec):
@@ -100,7 +100,9 @@ class Marker:
 
         # remove the z coordinate and only save x,y cooridnate
         self.frontal_coord_2D = np.delete(frontal_coord, [2,3], 0)
+        
         self.centre_coord_2D = np.delete(centre_coord, [2,3], 0)
+        
         
         
     
@@ -119,6 +121,7 @@ def calculate_angle(coord_centre, coord_front, coord_target):
         """
         Calculate the angle between the front of the marke and given target coordinate.
         The target coordinate is also in camera coordinate system
+        This is assuming 2D coordinate system
         """
         vec_front = np.subtract(coord_front, coord_centre)
         vec_target = np.subtract(coord_target, coord_centre)        
@@ -127,6 +130,5 @@ def calculate_angle(coord_centre, coord_front, coord_target):
         target_norm = np.linalg.norm(vec_target)
         angle_rad = np.arccos(np.dot(vec_front, vec_target) / (front_norm * target_norm))
         angle_deg = angle_rad * 180 / math.pi
-        # print("Angle")
-        print(angle_deg)
+        # print(f"Angle: {angle_deg}")
         return angle_deg

@@ -13,6 +13,7 @@ class Person:
         self._id = id
         # list that stores interests. This would need to be modified
         self._interests = []
+        self._interests_string = []
         # marker associated with this person.
         self.marker = Marker()
         # whether this person is present in the scene
@@ -71,8 +72,11 @@ class Person:
         # print(self._interests)
         self._interests.append(interest)
     
+    def add_interest_string(self, interest):
+        self._interests_string.append(interest)
+    
     def get_interests(self):
-        return self._interests.copy()
+        return self._interests_string.copy()
     
     def get_strength(self):
         return self.vib_strength
@@ -86,7 +90,7 @@ class Person:
         if self._id == target.get_id():
             return strength
 
-        for my_interest in self._interests:
+        for my_interest in self._interests_string:
             for target_interest in target.get_interests():
                 if my_interest == target_interest:
                     # print(f"Interests {my_interest} {target_interest}")
@@ -99,8 +103,12 @@ class Person:
         Returns the colour in a form of string
         '''
         colour_string = ""
-        for interest in self._interests:
-            colour_string += str(interest)
+        colour_string += str(self._interests[2])
+        colour_string += str(self._interests[0])
+        colour_string += str(self._interests[3])
+        colour_string += str(self._interests[1])
+        # for interest in self._interests:
+        #     colour_string += str(interest)
         return colour_string
 
     def is_facing_2D(self, target):

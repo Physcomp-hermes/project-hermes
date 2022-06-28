@@ -12,8 +12,8 @@ PORT = 5050
 HOSTNAME = socket.gethostname()
 print("Hostname: ", HOSTNAME)
 # SERVER = socket.gethostbyname(socket.getfqdn())
-# SERVER = '10.0.0.3'
-SERVER = '192.168.26.53'
+SERVER = '10.0.0.3'
+# SERVER = '192.168.26.53'
 ADDR = (SERVER, PORT)
 # TADDR = (TSERVER, PORT)
 FORMAT = 'utf-8'
@@ -26,7 +26,7 @@ server.bind(ADDR)
 # option 1: client asking server, and server responding
 # Option 2: Server talking to client
 def handle_client(conn, addr, people_dict):
-    print(f"[NEW CONNECTION] {addr} connected.")
+    # print(f"[NEW CONNECTION] {addr} connected.")
     
     # check id of the client
     connected = True
@@ -47,7 +47,7 @@ def handle_client(conn, addr, people_dict):
             if device_id in people_dict:
                 color = str(people_dict[device_id].get_colour())
                 conn.send(color.encode(FORMAT))
-                print("[Sent] ", color)
+                # print("[Sent] ", color)
             else:
                 conn.send("0000".encode(FORMAT))
                 print("Colour request for unregistered person")
@@ -58,7 +58,7 @@ def handle_client(conn, addr, people_dict):
             if device_id in people_dict:
                 strength = str(people_dict[device_id].get_strength())
                 conn.send(strength.encode(FORMAT))
-                print("[Sent] ", strength)
+                # print(f"[Sent] {strength} to {device_id}")
             else:
                 conn.send("0".encode(FORMAT))
                 print("colour request for unregistered person")

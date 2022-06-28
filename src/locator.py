@@ -18,14 +18,14 @@ class Locator:
         self.people_dict = people_dict
         # self.marker_dict = {}
         # camera stream that will be used 
-        self.cam = cv2.VideoCapture(2)
+        self.cam = cv2.VideoCapture(0)
         self.centres_camera = np.empty((1,))
         # calcualte camera matrix and distortion coefficients
         self.camera_matrix, self.dist_coeffs = calibrate()
 
         self.ui_frame = ui_frame
         # ID of reference marker
-        self.ref_id = 1
+        self.ref_id = 3
         self.has_ref = False
 
     
@@ -112,7 +112,7 @@ class Locator:
         """
         Update and process the next frame. Doesn't accept marker id 0
         """
-        facing_dict = self.__sample_frames(5)
+        facing_dict = self.__sample_frames(10)
         for id, person in self.people_dict.items():
             if id in facing_dict:
                 person.set_facing(self.people_dict[facing_dict[id]])
@@ -132,7 +132,7 @@ class Locator:
         """
         self.__process_next_interval()
         self.print_info()
-        self.ui_frame.after(100, self.run_locator)
+        self.ui_frame.after(200, self.run_locator)
     
     def show_markers(self):
         frame = self.__update_frame()
@@ -207,6 +207,8 @@ def calibrate():
     for im in images:
         # Read image
         frame = cv2.imread(im)
+        # cv2.imshow("frame",frame)
+        # cv2.waitKey()
         frame_bw = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         corners, ids, rej = cv2.aruco.detectMarkers(frame_bw, aruco_dict)
 
